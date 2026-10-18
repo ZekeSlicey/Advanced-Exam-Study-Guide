@@ -1524,7 +1524,7 @@ reader.addEventListener("click", function(e){
   if(ac){
     var qid2 = ac.getAttribute("data-ai-check");
     var qb = reader.querySelector('[data-qid="'+qid2+'"]');
-    var qtext = qb ? qb.getAttribute("data-qtext") : qid2;
+    var qtext = qb ? (qb.getAttribute("data-qfull") || qb.getAttribute("data-qtext")) : qid2;
     var ans2 = (store.answers[qid2] || "").trim() || "(no answer written yet)";
     var prompt = "Please check my answer to this SGI Advanced Exam study guide workbook question.\n\nQuestion: " + qtext + "\n\nMy answer: " + ans2 + "\n\nIs my answer correct and complete? If I'm missing anything important, tell me what to add.";
     copyText(prompt, "AI check prompt copied — paste it into any AI chat");
