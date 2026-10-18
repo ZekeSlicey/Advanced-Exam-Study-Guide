@@ -1458,7 +1458,7 @@ reader.addEventListener("click", function(e){
   if(bm){
     var s = bm.closest("section"), id = s.id;
     if(store.bookmarks[id]) delete store.bookmarks[id];
-    else store.bookmarks[id] = { title: secTitle(s), ts: Date.now() };
+    else store.bookmarks[id] = { title: secTitle(s), ts: Date.now(), y: window.scrollY || window.pageYOffset };
     saveNow(); refreshBookmarkButtons(); renderMarks();
     toast(store.bookmarks[id] ? "Bookmarked" : "Bookmark removed");
     return;
@@ -1889,7 +1889,7 @@ function renderMarks(){
       if(show("bookmarks") && store.bookmarks[sid]){
         var b = store.bookmarks[sid];
         parts += '<h5>Bookmark</h5><div class="mark-item"><span class="mi-text">🔖 '+esc(b.title||sid)+"</span>"+
-          '<div class="mi-row"><button type="button" class="mi-btn" data-act="jump" data-id="'+sid+'">Go to</button>'+
+          '<div class="mi-row"><button type="button" class="mi-btn" data-act="jumpbm" data-id="'+sid+'">Go to</button>'+
           '<button type="button" class="mi-btn danger" data-act="delbm" data-id="'+sid+'">Remove</button></div></div>';
       }
       if(parts){
@@ -1912,6 +1912,16 @@ marksList.addEventListener("click", function(e){
   var b = e.target.closest("[data-act]"); if(!b) return;
   var act = b.getAttribute("data-act"), id = b.getAttribute("data-id");
   if(act === "jump"){ jumpToSection(id); }
+  else if(act === "jumpbm"){
+    // Jump to the exact bookmarked scroll position, not just the section top.
+    var bm = store.bookmarks[id];
+    closeDrawer();
+    if(bm && typeof bm.y === "number"){
+      setTimeout(function(){ window.scrollTo({top: bm.y, behavior: "smooth"}); }, 50);
+    }else{
+      jumpToSection(id);
+    }
+  }
   else if(act === "delbm"){
     delete store.bookmarks[id]; saveNow(); refreshBookmarkButtons(); renderMarks();
   }
