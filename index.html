@@ -135,8 +135,6 @@ button{font-family:var(--sans); cursor:pointer}
 /* marks panel */
 .marks-empty{color:var(--muted); font-size:14px; padding:12px 4px}
 .marks-filters{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px}
-.marks-backup{display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:14px 4px 4px; border-top:1px solid var(--rule); margin-top:8px}
-.backup-hint{flex-basis:100%; margin:2px 0 0; font-size:12.5px; color:var(--muted)}
 .chip{
   border:1px solid var(--rule); background:var(--paper); color:var(--ink);
   border-radius:999px; min-height:32px; padding:0 12px; font-size:13px; font-weight:600;
@@ -448,12 +446,6 @@ footer.colophon{max-width:780px; margin:0 auto 60px; padding:0 20px; color:var(-
         <button type="button" class="chip" data-mfilter="bookmarks">Bookmarks</button>
       </div>
       <div id="marksList"></div>
-      <div class="marks-backup">
-        <button type="button" class="tbtn" id="btnExport">&#11015; Export backup</button>
-        <button type="button" class="tbtn" id="btnImport">&#11014; Import backup</button>
-        <input type="file" id="importFile" accept=".json,application/json" class="hidden">
-        <p class="backup-hint">Move your notes, highlights, answers and bookmarks between this app and your browser &mdash; or to another device.</p>
-      </div>
     </div>
     <div id="tab-progress" class="hidden">
       <div id="progressBody"></div>
@@ -1595,14 +1587,9 @@ function renderAllNotes(){ sections.forEach(renderSectionNotes); }
 
 /* ---------------- workbook answers ---------------- */
 var ansT = {};
-function fillAnswerBoxes(){
-  Array.prototype.forEach.call(reader.querySelectorAll("textarea.answer"), function(ta){
-    ta.value = store.answers[ta.getAttribute("data-answer-id")] || "";
-  });
-}
-fillAnswerBoxes();
 Array.prototype.forEach.call(reader.querySelectorAll("textarea.answer"), function(ta){
   var qid = ta.getAttribute("data-answer-id");
+  if(store.answers[qid]) ta.value = store.answers[qid];
   ta.addEventListener("input", function(){
     clearTimeout(ansT[qid]);
     ansT[qid] = setTimeout(function(){
@@ -2534,64 +2521,6 @@ renderMarks();
 setCurrent((currentSection()||sections[0]).id);
 if(document.readyState === "complete") restorePosition();
 else window.addEventListener("load", restorePosition);
-
-/* ---------------- backup export / import ---------------- */
-function downloadBackup(){
-  var stamp = new Date().toISOString().slice(0,10);
-  var blob = new Blob([JSON.stringify(store)], {type:"application/json"});
-  var a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "study-guide-backup-"+stamp+".json";
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 800);
-  toast("Backup downloaded");
-}
-function mergeBackup(data){
-  if(!data || typeof data !== "object" || !Array.isArray(data.highlights) || !Array.isArray(data.notes)){
-    throw new Error("not a backup");
-  }
-  var counts = {h:0, n:0, a:0, b:0};
-  var haveH = {}, haveN = {};
-  store.highlights.forEach(function(h){ haveH[h.id]=1; });
-  store.notes.forEach(function(n){ haveN[n.id]=1; });
-  (data.highlights||[]).forEach(function(h){
-    if(h && h.id && !haveH[h.id]){ store.highlights.push(h); haveH[h.id]=1; counts.h++; }
-  });
-  (data.notes||[]).forEach(function(n){
-    if(n && n.id && !haveN[n.id]){ store.notes.push(n); haveN[n.id]=1; counts.n++; }
-  });
-  var ans = data.answers||{};
-  Object.keys(ans).forEach(function(qid){
-    var v = String(ans[qid]==null?"":ans[qid]);
-    if(v.trim() && store.answers[qid]!==v){ store.answers[qid]=v; counts.a++; }
-  });
-  var bm = data.bookmarks||{};
-  Object.keys(bm).forEach(function(sid){
-    if(!store.bookmarks[sid]){ store.bookmarks[sid]=bm[sid]; counts.b++; }
-  });
-  (data.dontknow||[]).forEach(function(id){
-    if(store.dontknow.indexOf(id)<0) store.dontknow.push(id);
-  });
-  if(!store.pos && data.pos) store.pos = data.pos;
-  saveNow();
-  applyStoredHighlights(); refreshBookmarkButtons(); renderAllNotes(); fillAnswerBoxes(); renderMarks();
-  toast("Imported: "+counts.h+" highlights, "+counts.n+" notes, "+counts.a+" answers, "+counts.b+" bookmarks");
-}
-$("btnExport").addEventListener("click", downloadBackup);
-$("btnImport").addEventListener("click", function(){ $("importFile").click(); });
-$("importFile").addEventListener("change", function(){
-  var f = this.files && this.files[0];
-  if(!f) return;
-  var r = new FileReader();
-  r.onload = function(){
-    try{ mergeBackup(JSON.parse(r.result)); }
-    catch(e){ toast("That file isn't a study-guide backup"); }
-    $("importFile").value = "";
-  };
-  r.onerror = function(){ toast("Couldn't read that file"); $("importFile").value=""; };
-  r.readAsText(f);
-});
 
 })();
 
