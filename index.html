@@ -216,6 +216,11 @@ button{font-family:var(--sans); cursor:pointer}
 .quiz-score{font-family:var(--serif); font-size:26px; font-weight:700; margin:8px 0 12px}
 .quiz-missed-item{border:1px solid var(--rule); border-radius:8px; padding:10px; margin-bottom:8px; font-size:14px}
 .quiz-missed-item .mi-row{display:flex; gap:8px; margin-top:8px}
+.hl-expand{
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical;
+  overflow:hidden; cursor:pointer;
+}
+.hl-expand.expanded{ display:block; -webkit-line-clamp:unset; }
 
 /* review sheet */
 .review-overlay{
@@ -1888,9 +1893,10 @@ function renderMarks(){
       }
       if(show("highlights") && hlBySec[sid] && hlBySec[sid].length){
         parts += '<h5>Highlights ('+hlBySec[sid].length+')</h5>' + hlBySec[sid].map(function(h){
-          return '<div class="mark-item"><span class="mi-text">✨ “'+esc(excerpt(h.text,110))+'”'+
-            (h.note ? '<br><em>Note: '+esc(excerpt(h.note,110))+"</em>" : "")+"</span>"+
+          return '<div class="mark-item"><span class="mi-text hl-expand" data-hltext="'+esc(h.text)+'">✨ “'+esc(h.text)+'”'+
+            (h.note ? '<br><em>Note: '+esc(h.note)+"</em>" : "")+"</span>"+
             '<div class="mi-row"><button type="button" class="mi-btn" data-act="jumphl" data-id="'+h.id+'">Go to</button>'+
+            '<button type="button" class="mi-btn" data-act="copyhl" data-id="'+h.id+'">Copy</button>'+
             '<button type="button" class="mi-btn danger" data-act="delhl" data-id="'+h.id+'">Remove</button></div></div>';
         }).join("");
       }
@@ -1924,6 +1930,11 @@ document.querySelector("#marksFilters").addEventListener("click", function(e){
   saveNow(); renderMarks();
 });
 marksList.addEventListener("click", function(e){
+  var hx = e.target.closest(".hl-expand");
+  if(hx && !e.target.closest("[data-act]")){
+    hx.classList.toggle("expanded");
+    return;
+  }
   var b = e.target.closest("[data-act]"); if(!b) return;
   var act = b.getAttribute("data-act"), id = b.getAttribute("data-id");
   if(act === "jump"){ jumpToSection(id); }
@@ -1946,12 +1957,20 @@ marksList.addEventListener("click", function(e){
     if(!h) return;
     jumpToSection(h.sec, function(){
       var m = reader.querySelector('mark.hl[data-hid="'+id+'"]');
-      if(m){ m.classList.add("flash"); setTimeout(function(){ m.classList.remove("flash"); }, 1800); }
+      if(m){
+        m.scrollIntoView({behavior:"smooth", block:"center"});
+        m.classList.add("flash"); setTimeout(function(){ m.classList.remove("flash"); }, 1800);
+      }
     });
   }
   else if(act === "delhl"){
     store.highlights = store.highlights.filter(function(hh){ return hh.id!==id; });
     applyStoredHighlights(); saveNow(); renderMarks();
+  }
+  else if(act === "copyhl"){
+    var hc = null;
+    store.highlights.forEach(function(hh){ if(hh.id===id) hc=hh; });
+    if(hc) copyText(hc.text, "Highlight copied");
   }
   else if(act === "delnote"){
     store.notes = store.notes.filter(function(n){ return n.id!==id; });
