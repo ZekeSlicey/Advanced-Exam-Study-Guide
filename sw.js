@@ -1,7 +1,7 @@
 /* Service worker for the SGI Advanced Exam Study Guide PWA.
    CACHE is replaced at build time with a unique build id, so every new
    upload gets a fresh cache and old caches are purged on activate. */
-var CACHE = "sgi-study-guide-20261017-174324";
+var CACHE = "sgi-study-guide-20261018-145729";
 var CORE = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", function (e) {
