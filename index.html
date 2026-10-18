@@ -1312,6 +1312,19 @@ function onScroll(){
 }
 window.addEventListener("scroll", onScroll, {passive:true});
 
+function savePositionNow(){
+  var y = window.scrollY || window.pageYOffset;
+  var s = currentSection();
+  if(s) store.pos = { sec:s.id, y:y };
+  save();
+}
+// Save position when leaving the page (refresh, close, background) so a
+// quick refresh never loses the spot, even if the scroll handler hasn't fired.
+window.addEventListener("pagehide", savePositionNow);
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState === "hidden") savePositionNow();
+});
+
 function restorePosition(){
   var hash = location.hash ? location.hash.slice(1) : "";
   if(hash && secById[hash]){
