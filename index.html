@@ -343,7 +343,8 @@ mark.hl.flash{outline:3px solid var(--accent); outline-offset:1px}
   border:1px solid var(--rule); border-radius:12px; box-shadow:var(--shadow); padding:14px;
   font-family:var(--sans);
 }
-.hl-pop h4{margin:0 0 8px; font-size:14px}
+.hl-pop h4{margin:0 0 8px; font-size:14px; cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none}
+.hl-pop h4:active{cursor:grabbing}
 .hl-pop .hp-row .tbtn{
   border:1px solid var(--rule); background:var(--bg); color:var(--ink);
   border-radius:8px; min-height:36px; padding:0 12px; font-size:14px; font-weight:600;
@@ -1665,6 +1666,30 @@ function applyStoredHighlights(){
 }
 function hideSelBar(){ selBar.classList.add("hidden"); }
 function hideHlPop(){ hlPop.classList.add("hidden"); hlPop.removeAttribute("data-hid"); }
+// Drag the highlight popup by its header so it can be moved out of the way.
+(function(){
+  var h4 = hlPop.querySelector("h4");
+  var dragging = false, sx = 0, sy = 0, ox = 0, oy = 0;
+  h4.addEventListener("pointerdown", function(e){
+    dragging = true;
+    sx = e.clientX; sy = e.clientY;
+    ox = parseFloat(hlPop.style.left) || 0;
+    oy = parseFloat(hlPop.style.top) || 0;
+    h4.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  h4.addEventListener("pointermove", function(e){
+    if(!dragging) return;
+    var w = hlPop.offsetWidth, hgt = hlPop.offsetHeight;
+    var nx = Math.min(Math.max(ox + e.clientX - sx, 0), window.innerWidth - w);
+    var ny = Math.min(Math.max(oy + e.clientY - sy, 0), window.innerHeight - hgt);
+    hlPop.style.left = nx + "px";
+    hlPop.style.top = ny + "px";
+  });
+  ["pointerup","pointercancel"].forEach(function(ev){
+    h4.addEventListener(ev, function(){ dragging = false; });
+  });
+})();
 
 function selectionInBody(){
   var sel = window.getSelection();
