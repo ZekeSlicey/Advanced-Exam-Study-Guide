@@ -2431,6 +2431,36 @@ refreshBookmarkButtons();
 renderAllNotes();
 applyStoredHighlights();
 renderMarks();
+// Add "Go to chapter" buttons on workbook questions: for each WORKBOOK section,
+// find the first content section of that chapter (walking back to the previous
+// workbook) and link each question to it.
+(function(){
+  var isWb = function(t){ return /WORKBOOK QUESTIONS/i.test(t || ""); };
+  sections.forEach(function(sec, idx){
+    if(!isWb(sec.getAttribute("data-title"))) return;
+    var target = null;
+    for(var i = idx - 1; i >= 0; i--){
+      if(isWb(sections[i].getAttribute("data-title"))) break;
+      target = sections[i].id;
+    }
+    if(!target) return;
+    Array.prototype.forEach.call(sec.querySelectorAll(".qblock"), function(qb){
+      if(qb.querySelector("[data-goto-chapter]")) return;
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "link-btn";
+      btn.setAttribute("data-goto-chapter", target);
+      btn.textContent = "📖 Go to chapter";
+      btn.style.marginTop = "6px";
+      var wrap = qb.querySelector(".answer-wrap");
+      (wrap || qb).appendChild(btn);
+    });
+  });
+  reader.addEventListener("click", function(e){
+    var g = e.target.closest("[data-goto-chapter]");
+    if(g) jumpToSection(g.getAttribute("data-goto-chapter"));
+  });
+})();
 setCurrent((currentSection()||sections[0]).id);
 if(document.readyState === "complete") restorePosition();
 else window.addEventListener("load", restorePosition);
