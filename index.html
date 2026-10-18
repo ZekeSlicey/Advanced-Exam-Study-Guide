@@ -1898,6 +1898,11 @@ function renderMarks(){
     });
     hs.forEach(function(h){ (hlBySec[h.sec] = hlBySec[h.sec] || []).push(h); });
     ns.forEach(function(n){ (noteBySec[n.sec] = noteBySec[n.sec] || []).push(n); });
+    // Highlights that carry a note also count as notes (they were invisible in the Notes filter).
+    var hlNoteBySec = {};
+    hs.forEach(function(h){
+      if(h.note && String(h.note).trim()){ (hlNoteBySec[h.sec] = hlNoteBySec[h.sec] || []).push(h); }
+    });
     Object.keys(ansBySec).forEach(function(sid){ ansBySec[sid].sort(cmpQid); });
     Object.keys(hlBySec).forEach(function(sid){ hlBySec[sid].sort(function(a,b){ return (a.start||0)-(b.start||0); }); });
     Object.keys(noteBySec).forEach(function(sid){ noteBySec[sid].sort(function(a,b){ return (b.ts||0)-(a.ts||0); }); });
@@ -1925,12 +1930,20 @@ function renderMarks(){
             '<button type="button" class="mi-btn danger" data-act="delhl" data-id="'+h.id+'">Remove</button></div></div>';
         }).join("");
       }
-      if(show("notes") && noteBySec[sid] && noteBySec[sid].length){
-        parts += '<h5>Notes ('+noteBySec[sid].length+')</h5>' + noteBySec[sid].map(function(nt){
-          return '<div class="mark-item"><span class="mi-text">📝 '+esc(excerpt(nt.text,140))+"</span>"+
-            '<div class="mi-row"><button type="button" class="mi-btn" data-act="jump" data-id="'+nt.sec+'">Go to</button>'+
-            '<button type="button" class="mi-btn danger" data-act="delnote" data-id="'+nt.id+'">Delete</button></div></div>';
-        }).join("");
+      if(show("notes")){
+        var sn = noteBySec[sid] || [], hn = hlNoteBySec[sid] || [];
+        if(sn.length || hn.length){
+          parts += '<h5>Notes ('+(sn.length+hn.length)+')</h5>' + sn.map(function(nt){
+            return '<div class="mark-item"><span class="mi-text">📝 '+esc(excerpt(nt.text,140))+"</span>"+
+              '<div class="mi-row"><button type="button" class="mi-btn" data-act="jump" data-id="'+nt.sec+'">Go to</button>'+
+              '<button type="button" class="mi-btn danger" data-act="delnote" data-id="'+nt.id+'">Delete</button></div></div>';
+          }).join("") + hn.map(function(h){
+            return '<div class="mark-item"><span class="mi-text">📝 '+esc(excerpt(h.note,140))+
+              '<br><span style="color:var(--muted);font-size:12.5px">on “'+esc(excerpt(h.text,90))+'”</span></span>'+
+              '<div class="mi-row"><button type="button" class="mi-btn" data-act="jumphl" data-id="'+h.id+'">Go to</button>'+
+              '<button type="button" class="mi-btn danger" data-act="delhl" data-id="'+h.id+'">Remove</button></div></div>';
+          }).join("");
+        }
       }
       if(show("bookmarks") && store.bookmarks[sid]){
         var b = store.bookmarks[sid];
