@@ -1071,6 +1071,7 @@ footer.colophon{max-width:780px; margin:0 auto 60px; padding:0 20px; color:var(-
     </div>
     <div class="fcard-nav">
       <button type="button" class="tbtn" id="btnFcSpeak" aria-label="Read card aloud">🔊</button>
+      <button type="button" class="tbtn hidden" id="btnFcReview">📖 Review</button>
       <button type="button" class="tbtn hidden" id="btnFcKnow" aria-label="I know this">✓ Know</button>
       <button type="button" class="tbtn hidden" id="btnFcWeak" aria-label="Still learning this">✗ Weak</button>
       <button type="button" class="tbtn" id="btnFcShuffle">Shuffle</button>
@@ -1114,6 +1115,7 @@ footer.colophon{max-width:780px; margin:0 auto 60px; padding:0 20px; color:var(-
         <button type="button" class="tbtn quiz-good hidden" id="quizGotIt">✓ Got it</button>
         <button type="button" class="tbtn quiz-bad hidden" id="quizMissed">✗ Missed</button>
       </div>
+      <button type="button" class="link-btn quiz-skip" id="quizReview">📖 Review this in the guide</button>
       <button type="button" class="link-btn quiz-skip" id="quizSkip">Skip →</button>
     </div>
     <div id="quizSummary" class="hidden">
@@ -2212,6 +2214,17 @@ $("quizRevealBtn").addEventListener("click", quizReveal);
 $("quizGotIt").addEventListener("click", function(){ quizMark(true); });
 $("quizMissed").addEventListener("click", function(){ quizMark(false); });
 $("quizSkip").addEventListener("click", function(){ quizMark(false); });
+$("quizReview").addEventListener("click", function(){
+  var c = quiz.list[quiz.idx];
+  if(!c) return;
+  closeQuiz();
+  // Jump to the exact question in the reading view.
+  setTimeout(function(){
+    var qb = reader.querySelector('[data-qid="'+c.qid+'"]');
+    if(qb) qb.scrollIntoView({behavior:"smooth", block:"center"});
+    else jumpToSection(sidOfQid(c.qid));
+  }, 60);
+});
 $("quizAgain").addEventListener("click", function(){
   $("quizSummary").classList.add("hidden");
   $("quizSetup").classList.remove("hidden");
@@ -2336,7 +2349,24 @@ function renderCard(){
     }
   }
   updateWeakUI();
+  // Show the Review button when the current card is a workbook question.
+  var cur = data[fcOrder[fcIdx]];
+  var isQCard = !!(cur && (cur.qid || fcDeck === "questions"));
+  $("btnFcReview").classList.toggle("hidden", !isQCard);
 }
+$("btnFcReview").addEventListener("click", function(e){
+  e.stopPropagation();
+  var data = fcData();
+  if(!data.length) return;
+  var c = data[fcOrder[fcIdx]];
+  if(!c || !c.qid) return;
+  closeCards();
+  setTimeout(function(){
+    var qb = reader.querySelector('[data-qid="'+c.qid+'"]');
+    if(qb) qb.scrollIntoView({behavior:"smooth", block:"center"});
+    else jumpToSection(sidOfQid(c.qid));
+  }, 60);
+});
 $("btnDeckPassages").addEventListener("click", function(e){ e.stopPropagation(); setDeck("passages"); });
 $("btnDeckQuestions").addEventListener("click", function(e){ e.stopPropagation(); setDeck("questions"); });
 $("btnDeckWeak").addEventListener("click", function(e){ e.stopPropagation(); setDeck("weak"); });
