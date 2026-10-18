@@ -1410,6 +1410,7 @@ function doSearch(){
       parts.push([idx, idx+ql.length]); at = idx + ql.length;
     }
     // rebuild node with wrapped matches (process back to front)
+    var nodeHits = [];
     var cur = tn;
     for(var i=parts.length-1;i>=0;i--){
       var s = parts[i][0], e = parts[i][1];
@@ -1417,9 +1418,11 @@ function doSearch(){
       var mid = cur.splitText(s);
       var sp = document.createElement("span"); sp.className = "srch";
       mid.parentNode.replaceChild(sp, mid); sp.appendChild(mid);
-      srchHits.unshift(sp);
+      nodeHits.unshift(sp);
       cur = tn;
     }
+    // keep document order: this node's matches go after all previous nodes'
+    for(var k=0;k<nodeHits.length;k++) srchHits.push(nodeHits[k]);
   });
   if(srchHits.length){
     srchIdx = 0;
@@ -1821,6 +1824,16 @@ function openHlPop(hid, x, y){
   hlPop.style.left = Math.min(Math.max((x||window.innerWidth/2)-w/2, 8), window.innerWidth-w-8) + "px";
   hlPop.style.top = Math.min(Math.max((y||120)+12, 60), window.innerHeight-260) + "px";
 }
+function unwrapMarkById(hid){
+  var m = reader.querySelector('mark.hl[data-hid="'+hid+'"]');
+  if(m){
+    var body = m.closest(".sec-body");
+    var p = m.parentNode;
+    while(m.firstChild) p.insertBefore(m.firstChild, m);
+    p.removeChild(m);
+    if(body) body.normalize();
+  }
+}
 $("hlSaveNote").addEventListener("click", function(){
   var h = null;
   store.highlights.forEach(function(hh){ if(hh.id===hlPopHid) h=hh; });
@@ -1829,14 +1842,7 @@ $("hlSaveNote").addEventListener("click", function(){
 });
 $("hlRemove").addEventListener("click", function(){
   store.highlights = store.highlights.filter(function(hh){ return hh.id!==hlPopHid; });
-  var m = reader.querySelector('mark.hl[data-hid="'+hlPopHid+'"]');
-  if(m){
-    var body = m.closest(".sec-body");
-    var p = m.parentNode;
-    while(m.firstChild) p.insertBefore(m.firstChild, m);
-    p.removeChild(m);
-    if(body) body.normalize();
-  }
+  unwrapMarkById(hlPopHid);
   saveNow(); renderMarks(); hideHlPop();
   toast("Highlight removed");
 });
@@ -2003,7 +2009,8 @@ marksList.addEventListener("click", function(e){
   }
   else if(act === "delhl"){
     store.highlights = store.highlights.filter(function(hh){ return hh.id!==id; });
-    applyStoredHighlights(); saveNow(); renderMarks();
+    unwrapMarkById(id);
+    saveNow(); renderMarks();
   }
   else if(act === "copyhl"){
     var hc = null;
@@ -2179,9 +2186,9 @@ function quizPool(){
   var answered = function(qid){ return (store.answers[qid]||"").trim(); };
   var pool = QC.slice();
   if(quizMode === "unanswered"){
-    var un = pool.filter(function(c){ return !answered(c.qid); });
-    var an = pool.filter(function(c){ return answered(c.qid); });
-    // unanswered first, then answered to fill up
+    // shuffle within each group so unanswered stay first
+    var un = fcShuffle(pool.filter(function(c){ return !answered(c.qid); }));
+    var an = fcShuffle(pool.filter(function(c){ return answered(c.qid); }));
     pool = un.concat(an);
   }
   return pool;
@@ -2198,7 +2205,8 @@ function closeQuiz(){
   document.body.style.overflow = "";
 }
 function startQuiz(){
-  var pool = fcShuffle(quizPool().slice());
+  var pool = quizPool().slice();
+  if(quizMode === "mixed") fcShuffle(pool);
   quiz.list = pool.slice(0, Math.min(quizNum, pool.length));
   if(!quiz.list.length){ toast("No questions available"); return; }
   quiz.idx = 0; quiz.got = 0; quiz.missed = [];
