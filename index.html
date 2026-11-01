@@ -359,6 +359,16 @@ mark.hl.flash{outline:3px solid var(--accent); outline-offset:1px}
 }
 .hl-pop .hp-row .tbtn.danger{color:var(--accent); border-color:var(--accent)}
 
+/* snap pill: toggles between a workbook question and the reading spot */
+.snap-pill{
+  position:fixed; z-index:75; left:50%; bottom:calc(18px + env(safe-area-inset-bottom));
+  transform:translateX(-50%); display:flex; align-items:center; gap:2px;
+  background:var(--ink); color:var(--paper); border-radius:999px; box-shadow:var(--shadow);
+  padding:6px 6px 6px 16px; font-family:var(--sans); white-space:nowrap;
+}
+.snap-pill button{background:none; border:0; color:inherit; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit}
+.snap-pill .snap-x{font-size:20px; line-height:1; padding:4px 8px; opacity:.7}
+
 /* flashcards */
 .cards-overlay{
   position:fixed; inset:0; z-index:90; background:rgba(0,0,0,.55);
@@ -1067,6 +1077,11 @@ footer.colophon{max-width:780px; margin:0 auto 60px; padding:0 20px; color:var(-
     <button type="button" class="tbtn danger" id="hlRemove">Remove</button>
     <button type="button" class="tbtn" id="hlClose">Close</button>
   </div>
+</div>
+
+<div class="snap-pill hidden" id="snapPill">
+  <button type="button" id="snapGo">↩ Back to question</button>
+  <button type="button" class="snap-x" id="snapX" aria-label="Dismiss">×</button>
 </div>
 
 <div class="cards-overlay hidden" id="cardsOverlay">
@@ -2591,10 +2606,42 @@ renderMarks();
       (wrap || qb).appendChild(btn);
     });
   });
+  // Snap pill: toggles between the workbook question and the exact spot
+  // where the user was reading. × dismisses the snap session.
+  var snap = null;
+  var snapPill = $("snapPill"), snapGo = $("snapGo"), snapX = $("snapX");
+  function showSnapPill(label){ snapGo.textContent = label; snapPill.classList.remove("hidden"); }
   reader.addEventListener("click", function(e){
     var g = e.target.closest("[data-goto-chapter]");
-    if(g) jumpToSection(g.getAttribute("data-goto-chapter"));
+    if(!g) return;
+    var qb = g.closest(".qblock");
+    var qid = qb ? qb.getAttribute("data-qid") : null;
+    if(qid && snap && snap.qid === qid && snap.readY != null){
+      // Already snapping for this question: return to the exact reading spot.
+      snap.mode = "reading";
+      window.scrollTo({top: snap.readY, behavior:"auto"});
+      showSnapPill("↩ Back to question");
+    } else {
+      snap = {qid: qid, readY: null, mode: "reading"};
+      jumpToSection(g.getAttribute("data-goto-chapter"));
+      if(qid) showSnapPill("↩ Back to question");
+    }
   });
+  snapGo.addEventListener("click", function(){
+    if(!snap) return;
+    if(snap.mode === "reading"){
+      snap.readY = window.scrollY;
+      snap.mode = "question";
+      var qb = reader.querySelector('.qblock[data-qid="' + snap.qid + '"]');
+      if(qb) qb.scrollIntoView({block:"center"});
+      showSnapPill("📖 Back to reading");
+    } else {
+      snap.mode = "reading";
+      window.scrollTo({top: snap.readY || 0, behavior:"auto"});
+      showSnapPill("↩ Back to question");
+    }
+  });
+  snapX.addEventListener("click", function(){ snap = null; snapPill.classList.add("hidden"); });
 })();
 setCurrent((currentSection()||sections[0]).id);
 if(document.readyState === "complete") restorePosition();
