@@ -2946,7 +2946,7 @@ document.addEventListener("keydown", function(e){
    snapshot) lives in a SEPARATE localStorage key, so the store schema above
    is untouched and existing saved data keeps working. */
 var SYNC_LS_KEY = "sgi-study-guide-v1-sync";
-var syncState = { available:false, user:null, status:"signedout", lastSyncAt:0, lastPullAt:0 };
+var syncState = { available:false, user:null, status:"signedout", lastSyncAt:0, lastPullAt:0, lastError:null };
 var syncPushing = false, syncPushQueued = false, syncPushT = null, syncRetryT = null;
 
 function blankSyncMeta(){
@@ -3016,7 +3016,8 @@ function syncBoxHTML(){
         : "Sync starting…") + '</div>' +
       '<button type="button" class="tbtn" data-sync-act="signin" disabled>Sign in with Google</button>';
   }else if(!syncState.user){
-    inner += '<div class="sync-status" id="syncStatus">Signed out — saving on this device only.</div>' +
+    inner += '<div class="sync-status" id="syncStatus">Signed out — saving on this device only.' +
+      (syncState.lastError ? ' Sign-in failed: ' + esc(syncState.lastError) : '') + '</div>' +
       '<button type="button" class="tbtn" data-sync-act="signin">Sign in with Google to sync</button>';
   }else{
     inner += '<div class="sync-account">Signed in as ' + esc(who || "Google account") + '</div>' +
@@ -3105,7 +3106,13 @@ function syncSignIn(){
   }
   window.FirebaseSync.signIn().catch(function(err){
     if(err && err.code === "auth/popup-closed-by-user") return; // user dismissed it
-    toast("Couldn't sign in — please try again.");
+    // Surface the real Firebase error code (in the Sync box + toast) so a
+    // failed sign-in can actually be diagnosed instead of guessed at.
+    var code = (err && err.code) || "unknown error";
+    syncState.lastError = code;
+    if(window.console && console.error) console.error("[sync] sign-in failed:", err);
+    toast("Couldn't sign in (" + code + ") — please try again.");
+    refreshSyncBox();
   });
 }
 function syncSignOut(){
