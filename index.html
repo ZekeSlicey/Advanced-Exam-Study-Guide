@@ -2642,6 +2642,15 @@ renderMarks();
     }
   });
   snapX.addEventListener("click", function(){ snap = null; snapPill.classList.add("hidden"); });
+  // The pill must never cover a field being typed in: hide it while any
+  // input/textarea in the reader is focused, restore it on blur if a snap
+  // session is still active.
+  reader.addEventListener("focusin", function(e){
+    if(e.target.matches && e.target.matches("input, textarea")) snapPill.classList.add("hidden");
+  });
+  reader.addEventListener("focusout", function(e){
+    if(e.target.matches && e.target.matches("input, textarea") && snap) snapPill.classList.remove("hidden");
+  });
   // The pill follows the question you're on: while a snap session is active
   // and you're scrolled within a workbook section, re-anchor to the question
   // nearest the top of the viewport, so the pill never keeps pointing at an
