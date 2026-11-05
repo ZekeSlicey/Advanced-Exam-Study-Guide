@@ -13,6 +13,13 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <title>Advanced Exam Study Guide</title>
+<script type="importmap">
+{"imports": {
+  "firebase/app": "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js",
+  "firebase/auth": "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js",
+  "firebase/firestore": "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js"
+}}
+</script>
 <style>
 /* SGI-USA Advanced Exam Study Guide — standalone app styles (system fonts only) */
 :root{
@@ -173,6 +180,13 @@ button{font-family:var(--sans); cursor:pointer}
 .prog-mini > div{height:100%; background:var(--accent); border-radius:999px}
 .prog-num{font-size:12.5px; color:var(--muted); flex:none; min-width:52px; text-align:right}
 .quiz-start-btn{margin-top:12px; width:100%}
+
+/* sync box (Progress tab) */
+.sync-box{background:var(--paper); border:1px solid var(--rule); border-radius:12px; padding:14px 16px; margin-bottom:14px}
+.sync-box h4{margin:0 0 6px; font-size:14px}
+.sync-status{font-size:13.5px; color:var(--muted); margin:6px 0 10px}
+.sync-account{font-size:13.5px; margin:6px 0; word-break:break-word}
+.sync-box .tbtn{min-height:40px}
 
 /* quiz overlay */
 .quiz-overlay{
@@ -1064,7 +1078,7 @@ footer.colophon{max-width:780px; margin:0 auto 60px; padding:0 20px; color:var(-
 </main>
 
 <footer class="colophon">
-  <p>Study copy of the SGI-USA Advanced Exam Study Guide. Your bookmarks, highlights, notes, and answers are stored only in this browser.</p>
+  <p>Study copy of the SGI-USA Advanced Exam Study Guide. Your bookmarks, highlights, notes, and answers are stored in this browser — sign in (Progress tab) to sync them between your devices.</p>
 </footer>
 
 <div class="selbar hidden" id="selBar"><button type="button" id="hlBtn">Highlight</button></div>
@@ -1179,6 +1193,344 @@ window.__FC__ = [{"sec": "CHAPTER 1", "cue": "There are three categories of peop
 window.__QC__ = [{"sec": "WORKBOOK QUESTIONS—INTRODUCTION", "qid": "page-10-q1", "q": "1. Regarding the background of “The Opening of the Eyes”: a) What year did Nichiren complete this writing?", "qf": "1. Regarding the background of “The Opening of the Eyes”: a) What year did Nichiren complete this writing?"}, {"sec": "WORKBOOK QUESTIONS—INTRODUCTION", "qid": "page-10-q1b", "q": "b) Who was it written to?", "qf": "1. Regarding the background of “The Opening of the Eyes”: b) Who was it written to?"}, {"sec": "WORKBOOK QUESTIONS—INTRODUCTION", "qid": "page-10-q1c", "q": "c) Where was Nichiren when he wrote it?", "qf": "1. Regarding the background of “The Opening of the Eyes”: c) Where was Nichiren when he wrote it?"}, {"sec": "WORKBOOK QUESTIONS—INTRODUCTION", "qid": "page-10-q1d", "q": "d) Why was he there?", "qf": "1. Regarding the background of “The Opening of the Eyes”: d) Why was he there?"}, {"sec": "WORKBOOK QUESTIONS—INTRODUCTION", "qid": "page-10-q1e", "q": "e) What conditions did Nichiren face?", "qf": "1. Regarding the background of “The Opening of the Eyes”: e) What conditions did Nichiren face?"}, {"sec": "WORKBOOK QUESTIONS—INTRODUCTION", "qid": "page-10-q2", "q": "2. Ikeda Sensei delves deeper into the principle of “casting off the transient and revealing the true in later chapters in his lecture series on “The Opening of the Eyes,” but based on the explanation in this “Introduction” chapter: a) What did Nichiren “cast off”?", "qf": "2. Ikeda Sensei delves deeper into the principle of “casting off the transient and revealing the true in later chapters in his lecture series on “The Opening of the Eyes,” but based on the explanation in this “Introduction” chapter: a) What did Nichiren “cast off”?"}, {"sec": "WORKBOOK QUESTIONS—INTRODUCTION", "qid": "page-10-q2b", "q": "b) What did he “reveal”?", "qf": "2. Ikeda Sensei delves deeper into the principle of “casting off the transient and revealing the true in later chapters in his lecture series on “The Opening of the Eyes,” but based on the explanation in this “Introduction” chapter: b) What did he “reveal”?"}, {"sec": "WORKBOOK QUESTIONS—INTRODUCTION", "qid": "page-10-q2c", "q": "c) And what was the result of his casting off the transient and revealing the true?", "qf": "2. Ikeda Sensei delves deeper into the principle of “casting off the transient and revealing the true in later chapters in his lecture series on “The Opening of the Eyes,” but based on the explanation in this “Introduction” chapter: c) And what was the result of his casting off the transient and revealing the true?"}, {"sec": "WORKBOOK QUESTIONS—INTRODUCTION", "qid": "page-10-q3", "q": "3. What does Ikeda Sensei say it means to “open your eyes to Nichiren”?", "qf": "3. What does Ikeda Sensei say it means to “open your eyes to Nichiren”?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 1", "qid": "page-14-q1", "q": "1. Nichiren contrasts the teachings of Buddhism with various schools of thought in China and India. He states that revered figures in those schools of thought are called “sages” or “wise men,” but they are, in fact, no more than ordinary people. What two reasons does he give for this assertion?", "qf": "1. Nichiren contrasts the teachings of Buddhism with various schools of thought in China and India. He states that revered figures in those schools of thought are called “sages” or “wise men,” but they are, in fact, no more than ordinary people. What two reasons does he give for this assertion?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 1", "qid": "page-14-q2", "q": "2. In “The True Aspect of All Phenomena,” Nichiren writes: “A common mortal is an entity of the three bodies, and a true Buddha. A Buddha [such as Shakyamuni or Many Treasures] is a function of the three bodies, and a provisional Buddha. In that case, though it is thought that Shakyamuni Buddha poss", "qf": "2. In “The True Aspect of All Phenomena,” Nichiren writes: “A common mortal is an entity of the three bodies, and a true Buddha. A Buddha [such as Shakyamuni or Many Treasures] is a function of the three bodies, and a provisional Buddha. In that case, though it is thought that Shakyamuni Buddha possesses the three virtues of sovereign, teacher, and parent for the sake of all of us living beings, that is not so. On the contrary, it is common mortals who endow him with the three virtues” (WND-1, 384). According to this passage, why does the Daishonin say that living beings, rather than Shakyamuni Buddha, endow him with the three virtues of sovereign, teacher, and parent?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 1", "qid": "page-14-q3", "q": "1. Nichiren begins “The Opening of the Eyes” stating: “There are three categories of people that all human beings should respect. They are the ____________________, the ____________________, and the ____________________. There are three types of doctrines that are to be studied. They are Confucianis", "qf": "1. Nichiren begins “The Opening of the Eyes” stating: “There are three categories of people that all human beings should respect. They are the ____________________, the ____________________, and the ____________________. There are three types of doctrines that are to be studied. They are Confucianism, Brahmanism, and Buddhism” (WND-1, 220)."}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 1", "qid": "page-14-q4", "q": "2. Thirdly [following Confucianism and Brahmanism], we come to Buddhism. One should know that the World-Honored One of Great Enlightenment [Shakyamuni Buddha] is a great leader for all living beings, a great eye for them, a great bridge, a great helmsman, a great field of good fortune. The four sage", "qf": "2. Thirdly [following Confucianism and Brahmanism], we come to Buddhism. One should know that the World-Honored One of Great Enlightenment [Shakyamuni Buddha] is a great leader for all living beings, a great eye for them, a great bridge, a great helmsman, a great field of good fortune. The four sages and three ascetics of the Confucian and Brahmanical scriptures and teachings are referred to as sages, but in fact they are no more than ordinary people who have not yet been able to eradicate the three categories of ____________________. They are referred to as wise men, but in fact they are no more than infants who cannot understand the principles of ____________________. (WND-1, 223)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 2", "qid": "page-18-q1", "q": "1. What is the teaching hidden in the depths of the “Life Span” chapter of the essential teaching of the Lotus Sutra?", "qf": "1. What is the teaching hidden in the depths of the “Life Span” chapter of the essential teaching of the Lotus Sutra?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 2", "qid": "page-18-q2", "q": "2. In “The Opening of the Eyes,” Nichiren states: “The Lotus Sutra contains two important teachings.” What are they?", "qf": "2. In “The Opening of the Eyes,” Nichiren states: “The Lotus Sutra contains two important teachings.” What are they?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 2", "qid": "page-18-q3", "q": "3. Nichiren writes that the fundamental Law “is found in only one place.” According to Nichikan, the word “only” can be said to have three meanings: 1) only in the Lotus Sutra; 2) only in the “Life Span” chapter; and 3) only hidden in the depths of that chapter. Together, these three meanings refer ", "qf": "3. Nichiren writes that the fundamental Law “is found in only one place.” According to Nichikan, the word “only” can be said to have three meanings: 1) only in the Lotus Sutra; 2) only in the “Life Span” chapter; and 3) only hidden in the depths of that chapter. Together, these three meanings refer to a system of comparison. a) What is this system known as?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 2", "qid": "page-18-q3b", "q": "b) Can you explain each comparison in that system?", "qf": "3. Nichiren writes that the fundamental Law “is found in only one place.” According to Nichikan, the word “only” can be said to have three meanings: 1) only in the Lotus Sutra; 2) only in the “Life Span” chapter; and 3) only hidden in the depths of that chapter. Together, these three meanings refer to a system of comparison. b) Can you explain each comparison in that system?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 3", "qid": "page-25-q1", "q": "1. In this section of “The Opening of the Eyes,” Nichiren states that the pre-Lotus Sutra teachings have “two flaws.” According to the passage: a) What are these two flaws?", "qf": "1. In this section of “The Opening of the Eyes,” Nichiren states that the pre-Lotus Sutra teachings have “two flaws.” According to the passage: a) What are these two flaws?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 3", "qid": "page-25-q1b", "q": "b) How are they connected to the teachings that “conceal the fact that people of the two vehicles can attain Buddhahood” and “fail to make clear that the Buddha attained enlightenment countless kalpas in the past”?", "qf": "1. In this section of “The Opening of the Eyes,” Nichiren states that the pre-Lotus Sutra teachings have “two flaws.” According to the passage: b) How are they connected to the teachings that “conceal the fact that people of the two vehicles can attain Buddhahood” and “fail to make clear that the Buddha attained enlightenment countless kalpas in the past”?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 3", "qid": "page-25-q2", "q": "2. Among the “two errors found in the earlier sutras,” Nichiren says that the Lotus Sutra’s theoretical teaching [the first half] of the Lotus Sutra makes clear that people of the two vehicles can achieve Buddhahood, eliminating one of these two errors. But what is the second error that the theoreti", "qf": "2. Among the “two errors found in the earlier sutras,” Nichiren says that the Lotus Sutra’s theoretical teaching [the first half] of the Lotus Sutra makes clear that people of the two vehicles can achieve Buddhahood, eliminating one of these two errors. But what is the second error that the theoretical teaching fails to shed light on?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 3", "qid": "page-25-q3", "q": "3. In the key passage on the essential teaching, Nichiren declares that demolishing the belief that Shakyamuni first attained Buddhahood in his present lifetime reveals “the doctrine of original cause and original effect.” a) How does this doctrine clarify that “the nine worlds are all present in be", "qf": "3. In the key passage on the essential teaching, Nichiren declares that demolishing the belief that Shakyamuni first attained Buddhahood in his present lifetime reveals “the doctrine of original cause and original effect.” a) How does this doctrine clarify that “the nine worlds are all present in beginningless Buddhahood” and that “Buddhahood is inherent in the beginningless nine worlds”?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 3", "qid": "page-25-q3b", "q": "b) Why is this described as “the true mutual possession of the Ten Worlds”?", "qf": "3. In the key passage on the essential teaching, Nichiren declares that demolishing the belief that Shakyamuni first attained Buddhahood in his present lifetime reveals “the doctrine of original cause and original effect.” b) Why is this described as “the true mutual possession of the Ten Worlds”?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 4", "qid": "page-29-q1", "q": "1. In the fivefold comparisons, what is the fundamental criterion or perspective Nichiren uses to judge the relative superiority and depth of various teachings?", "qf": "1. In the fivefold comparisons, what is the fundamental criterion or perspective Nichiren uses to judge the relative superiority and depth of various teachings?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 4", "qid": "page-29-q2", "q": "2. How do the theoretical and the essential teachings differ regarding Shakyamuni’s enlightenment?", "qf": "2. How do the theoretical and the essential teachings differ regarding Shakyamuni’s enlightenment?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 4", "qid": "page-29-q3", "q": "3. By explaining this difference, what did Nichiren aim to reveal or clarify?", "qf": "3. By explaining this difference, what did Nichiren aim to reveal or clarify?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 4", "qid": "page-29-q4", "q": "4. Regarding Shakyamuni’s enlightenment: a) What does Nichiren Buddhism, the Buddhism of sowing, directly reveal?", "qf": "4. Regarding Shakyamuni’s enlightenment: a) What does Nichiren Buddhism, the Buddhism of sowing, directly reveal?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 4", "qid": "page-29-q4b", "q": "b) What makes the Buddhism of sowing superior to the Buddhism of the harvest?", "qf": "4. Regarding Shakyamuni’s enlightenment: b) What makes the Buddhism of sowing superior to the Buddhism of the harvest?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 4", "qid": "page-29-q4c", "q": "c) And what did Nichiren establish as a way for ordinary people to reveal their enlightenment?", "qf": "4. Regarding Shakyamuni’s enlightenment: c) And what did Nichiren establish as a way for ordinary people to reveal their enlightenment?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 5", "qid": "page-34-q1", "q": "1. In “The Opening of the Eyes,” Nichiren describes his thought process before establishing his teaching of Nam-myoho-renge-kyo. Aware of what caused people to suffer, he writes, “I, Nichiren, am the only person in Japan who understands this.” In brief, what does “this” refer to?", "qf": "1. In “The Opening of the Eyes,” Nichiren describes his thought process before establishing his teaching of Nam-myoho-renge-kyo. Aware of what caused people to suffer, he writes, “I, Nichiren, am the only person in Japan who understands this.” In brief, what does “this” refer to?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 5", "qid": "page-34-q2", "q": "2. Thinking about the difficulty of embracing the Lotus Sutra, Nichiren recalls the teachings of the “Treasure Tower” chapter stating, “Persons like myself who are of paltry strength might still be able to lift Mount Sumeru and toss it about. … But such acts are not difficult, we are told, when comp", "qf": "2. Thinking about the difficulty of embracing the Lotus Sutra, Nichiren recalls the teachings of the “Treasure Tower” chapter stating, “Persons like myself who are of paltry strength might still be able to lift Mount Sumeru and toss it about. … But such acts are not difficult, we are told, when compared to the difficulty of embracing even one phrase or verse of the Lotus Sutra in the Latter Day of the Law.” (WND-1, 239) a) What is that teaching?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 5", "qid": "page-34-q2b", "q": "b) Explain its significance.", "qf": "2. Thinking about the difficulty of embracing the Lotus Sutra, Nichiren recalls the teachings of the “Treasure Tower” chapter stating, “Persons like myself who are of paltry strength might still be able to lift Mount Sumeru and toss it about. … But such acts are not difficult, we are told, when compared to the difficulty of embracing even one phrase or verse of the Lotus Sutra in the Latter Day of the Law.” (WND-1, 239) b) Explain its significance."}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 5", "qid": "page-34-q3", "q": "1. Nichiren states: “Nevertheless, I vowed to summon up a powerful and unconquerable desire for the ____________________ and never to falter in my efforts. (WND-1, 239–40)", "qf": "1. Nichiren states: “Nevertheless, I vowed to summon up a powerful and unconquerable desire for the ____________________ and never to falter in my efforts. (WND-1, 239–40)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 6", "qid": "page-38-q1", "q": "1. Nichiren states that when it comes to understanding the Lotus Sutra, he possesses only a minute fraction of the vast ability that T’ien-t’ai and Dengyo possessed. But what qualities does he say distinguish him as a votary of the Lotus Sutra?", "qf": "1. Nichiren states that when it comes to understanding the Lotus Sutra, he possesses only a minute fraction of the vast ability that T’ien-t’ai and Dengyo possessed. But what qualities does he say distinguish him as a votary of the Lotus Sutra?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 6", "qid": "page-38-q2", "q": "2. Why does Nichiren question his lack of protection from the heavenly gods and benevolent deities?", "qf": "2. Why does Nichiren question his lack of protection from the heavenly gods and benevolent deities?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 6", "qid": "page-38-q3", "q": "1. When it comes to understanding the Lotus Sutra, I have only a minute fraction of the vast ability that T’ien-t’ai and Dengyo possessed. But as regards my ability to ____________________ and the wealth of my ____________________, I believe they would hold me in awe. (WND-1, 242)", "qf": "1. When it comes to understanding the Lotus Sutra, I have only a minute fraction of the vast ability that T’ien-t’ai and Dengyo possessed. But as regards my ability to ____________________ and the wealth of my ____________________, I believe they would hold me in awe. (WND-1, 242)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 7", "qid": "page-42-q1", "q": "1. What is Nichiren’s “doubt [that] lies at the heart of this piece I am writing,” which he also describes as “the most important concern of my entire life” (WND-1, 243)?", "qf": "1. What is Nichiren’s “doubt [that] lies at the heart of this piece I am writing,” which he also describes as “the most important concern of my entire life” (WND-1, 243)?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 7", "qid": "page-42-q2", "q": "2. In light of Nichiren’s explanation, what is a true votary of the Lotus Sutra?", "qf": "2. In light of Nichiren’s explanation, what is a true votary of the Lotus Sutra?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 7", "qid": "page-42-q3", "q": "3. According to Nichiren, why do bodhisattvas, persons of the two vehicles and heavenly beings owe a profound debt to the Lotus Sutra? How should that debt be expressed?", "qf": "3. According to Nichiren, why do bodhisattvas, persons of the two vehicles and heavenly beings owe a profound debt to the Lotus Sutra? How should that debt be expressed?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 8", "qid": "page-46-q1", "q": "1. Why did Shakyamuni set forth the “six difficult and nine easy acts”?", "qf": "1. Why did Shakyamuni set forth the “six difficult and nine easy acts”?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 8", "qid": "page-46-q2", "q": "2. What does Nichiren mean when he declares, “I, Nichiren, am the richest man in all of present-day Japan”?", "qf": "2. What does Nichiren mean when he declares, “I, Nichiren, am the richest man in all of present-day Japan”?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 8", "qid": "page-46-q3", "q": "3. What do Nichiren’s metaphors of the “lord of the great ocean” and “king of Mount Sumeru” represent?", "qf": "3. What do Nichiren’s metaphors of the “lord of the great ocean” and “king of Mount Sumeru” represent?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 8", "qid": "page-46-q4", "q": "1. I, Nichiren, am the ____________________ man in all of present-day Japan. I have dedicated my life to the Lotus Sutra, and my name will be handed down in ages to come. (WND-1, 268)", "qf": "1. I, Nichiren, am the ____________________ man in all of present-day Japan. I have dedicated my life to the Lotus Sutra, and my name will be handed down in ages to come. (WND-1, 268)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 9", "qid": "page-50-q1", "q": "1. Of the “Devadatta” chapter’s “two enlightening admonitions” (WND-1, 268) discussed in this portion of “The Opening of the Eyes,” what is the first admonition?", "qf": "1. Of the “Devadatta” chapter’s “two enlightening admonitions” (WND-1, 268) discussed in this portion of “The Opening of the Eyes,” what is the first admonition?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 9", "qid": "page-50-q2", "q": "2. The second admonition concerns the enlightenment of someone who serves as “one example that stands for all the rest” (WND-1, 269). Who is this person?", "qf": "2. The second admonition concerns the enlightenment of someone who serves as “one example that stands for all the rest” (WND-1, 269). Who is this person?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 9", "qid": "page-50-q3", "q": "1. When the dragon king’s daughter attained Buddhahood, it opened up the way to attaining Buddhahood for all ____________________ of later ages (WND-1, 269).", "qf": "1. When the dragon king’s daughter attained Buddhahood, it opened up the way to attaining Buddhahood for all ____________________ of later ages (WND-1, 269)."}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 10", "qid": "page-55-q1", "q": "1. Nichiren then briefly describes the Tatsunokuchi Persecution and his subsequent exile to Sado Island, writing that “this person named Nichiren was beheaded. It is his soul that has come to this island of Sado and, in the second month of the following year, snowbound, is writing this to send to hi", "qf": "1. Nichiren then briefly describes the Tatsunokuchi Persecution and his subsequent exile to Sado Island, writing that “this person named Nichiren was beheaded. It is his soul that has come to this island of Sado and, in the second month of the following year, snowbound, is writing this to send to his close disciples” (WND-1, 269). Here, “his soul” can point to the life state of “the Buddha of limitless joy enlightened from time without beginning.” What Buddhist principle does this passage express?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 10", "qid": "page-55-q2", "q": "2. Of the three powerful enemies, which passage below from the “Encouraging Devotion” chapter pertains to arrogant lay people?", "qf": "2. Of the three powerful enemies, which passage below from the “Encouraging Devotion” chapter pertains to arrogant lay people?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 10", "qid": "page-55-q3", "q": "3. The Lotus Sutra’s “Encouraging Devotion” chapter states: “In that evil age there will be monks with perverse wisdom and hearts that are fawning and crooked who will suppose they have attained what they have not attained, being proud and boastful in heart.” (LSOC, 232) Which of the three powerful ", "qf": "3. The Lotus Sutra’s “Encouraging Devotion” chapter states: “In that evil age there will be monks with perverse wisdom and hearts that are fawning and crooked who will suppose they have attained what they have not attained, being proud and boastful in heart.” (LSOC, 232) Which of the three powerful enemies does this passage describe?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 10", "qid": "page-55-q4", "q": "4. The Lotus Sutra’s “Encouraging Devotion” chapter states: “There will be forest-dwelling monks wearing clothing of patched rags and living in retirement, who will claim they are practicing the true way, despising and looking down on all humankind. … [They] will be respected and revered by the worl", "qf": "4. The Lotus Sutra’s “Encouraging Devotion” chapter states: “There will be forest-dwelling monks wearing clothing of patched rags and living in retirement, who will claim they are practicing the true way, despising and looking down on all humankind. … [They] will be respected and revered by the world as though they were arhats who possess the six transcendental powers. [They] will borrow the name of forest-dwelling monks and take delight in proclaiming our faults.” (LSOC, 232–33) Which of the three powerful enemies does this passage describe?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 10", "qid": "page-55-q5", "q": "1. On the twelfth day of the ninth month of last year [1271, on the occasion of the Tatsunokuchi Persecution], between the hours of the rat and the ox (11:00 p.m. to 3:00 a.m.), this ____________________ was beheaded. It is ____________________ that has come to this island of Sado and, in the second", "qf": "1. On the twelfth day of the ninth month of last year [1271, on the occasion of the Tatsunokuchi Persecution], between the hours of the rat and the ox (11:00 p.m. to 3:00 a.m.), this ____________________ was beheaded. It is ____________________ that has come to this island of Sado and, in the second month of the following year, snowbound, is writing this to send to his close disciples. (WND-1, 269)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 10", "qid": "page-55-q6", "q": "2. [The description of the evil age in the “Encouraging Devotion” chapter seems] terrible, but [one who cares nothing about oneself for the sake of the Law has] nothing to be frightened about. Others reading it will be terrified. This scriptural passage is the ____________________ that Shakyamuni, M", "qf": "2. [The description of the evil age in the “Encouraging Devotion” chapter seems] terrible, but [one who cares nothing about oneself for the sake of the Law has] nothing to be frightened about. Others reading it will be terrified. This scriptural passage is the ____________________ that Shakyamuni, Many Treasures, and the Buddhas of the ten directions left for the future of Japan, and in which the present state of the country is reflected. (WND-1, 269)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 11", "qid": "page-63-q1", "q": "1. In “The Opening of the Eyes,” Nichiren cites a sutra passage to point out that “the extremely evil deeds done by the icchantika are all but impossible to perceive” (WND-1, 277). Why are arrogant false sages considered the most formidable of the three powerful enemies?", "qf": "1. In “The Opening of the Eyes,” Nichiren cites a sutra passage to point out that “the extremely evil deeds done by the icchantika are all but impossible to perceive” (WND-1, 277). Why are arrogant false sages considered the most formidable of the three powerful enemies?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 11", "qid": "page-63-q2", "q": "2. According to Nichiren, who has the ability to identify the true nature of arrogant false sages and why?", "qf": "2. According to Nichiren, who has the ability to identify the true nature of arrogant false sages and why?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 11", "qid": "page-63-q3", "q": "3. How did Nichiren’s archenemy Ryokan exemplify the characteristics of an arrogant false sage?", "qf": "3. How did Nichiren’s archenemy Ryokan exemplify the characteristics of an arrogant false sage?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 11", "qid": "page-63-q4", "q": "4. What explanation does Nichiren give as proof that he encountered the three powerful enemies?", "qf": "4. What explanation does Nichiren give as proof that he encountered the three powerful enemies?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 11", "qid": "page-63-q5", "q": "1. “Concerning the third group of enemies of the Lotus Sutra, the sutra says: ‘Or there will be forest- dwelling monks wearing clothing of ____________________ and living in retirement...they will preach the Law to white-robed laymen and will be respected and revered by the world as though they were", "qf": "1. “Concerning the third group of enemies of the Lotus Sutra, the sutra says: ‘Or there will be forest- dwelling monks wearing clothing of ____________________ and living in retirement...they will preach the Law to white-robed laymen and will be respected and revered by the world as though they were arhats who possess the ____________________.’” (WND-1, 275)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 11", "qid": "page-63-q6", "q": "2. “Those without eyes, those with only one eye, and those with distorted vision cannot see these three types of enemies of the Lotus Sutra who have appeared at the beginning of the Latter Day of the Law. But those who have attained a portion of the ____________________ can see who they are.”", "qf": "2. “Those without eyes, those with only one eye, and those with distorted vision cannot see these three types of enemies of the Lotus Sutra who have appeared at the beginning of the Latter Day of the Law. But those who have attained a portion of the ____________________ can see who they are.”"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 11", "qid": "page-63-q7", "q": "3. “Because the predictions of the Buddha are not false, the ____________________________________ of the Lotus Sutra already ﬁll the country. And yet, as though to belie the golden words of the Buddha, there seems to be no ____________________ of the Lotus Sutra.” (WND-1, 278)", "qf": "3. “Because the predictions of the Buddha are not false, the ____________________________________ of the Lotus Sutra already ﬁll the country. And yet, as though to belie the golden words of the Buddha, there seems to be no ____________________ of the Lotus Sutra.” (WND-1, 278)"}, {"sec": "The three types of enemies have already appeared. Who, then, is the votary of th", "qid": "page-64-q1", "q": "4. “The Buddha and ____________________ are like a form and its ____________________—in lifetime after lifetime, they are never separated. Prince Shotoku and his archenemy Moriya appeared at the same time, like the blossom and the calyx of the lotus. If there exists a votary of the Lotus Sutra, then", "qf": "4. “The Buddha and ____________________ are like a form and its ____________________—in lifetime after lifetime, they are never separated. Prince Shotoku and his archenemy Moriya appeared at the same time, like the blossom and the calyx of the lotus. If there exists a votary of the Lotus Sutra, then the three types of enemies are bound to exist as well.” (WND-1, 278)"}, {"sec": "The three types of enemies have already appeared. Who, then, is the votary of th", "qid": "page-64-q2", "q": "5. “If there exists a votary of the Lotus Sutra, then the three types of enemies are bound to exist as well.", "qf": "5. “If there exists a votary of the Lotus Sutra, then the three types of enemies are bound to exist as well."}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 12", "qid": "page-68-q1", "q": "1. Regarding Nichiren’s comments about Bodhisattva Never Disparaging and slander of the Law:", "qf": "1. Regarding Nichiren’s comments about Bodhisattva Never Disparaging and slander of the Law:"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 12", "qid": "page-68-q1a", "q": "a) Why was Bodhisattva Never Disparaging attacked with tiles and stones?", "qf": "1. Regarding Nichiren’s comments about Bodhisattva Never Disparaging and slander of the Law: a) Why was Bodhisattva Never Disparaging attacked with tiles and stones?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 12", "qid": "page-68-q1b", "q": "b) Based on Never Disparaging’s example, name one reason that we could conclude why a votary of the Lotus Sutra might experience persecution despite the sutra’s promise of protection?", "qf": "1. Regarding Nichiren’s comments about Bodhisattva Never Disparaging and slander of the Law: b) Based on Never Disparaging’s example, name one reason that we could conclude why a votary of the Lotus Sutra might experience persecution despite the sutra’s promise of protection?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 12", "qid": "page-68-q2", "q": "2. What does Nichiren identify as the fate of icchantikas who persist in slandering the Lotus Sutra?", "qf": "2. What does Nichiren identify as the fate of icchantikas who persist in slandering the Lotus Sutra?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 12", "qid": "page-68-q3", "q": "3. What is the third reason Nichiren cites as to why some offenders escape immediate punishment?", "qf": "3. What is the third reason Nichiren cites as to why some offenders escape immediate punishment?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 12", "qid": "page-68-q4", "q": "4. Nichiren provides a three-point explanation as to why votaries of the Lotus Sutra incur persecution. What is the common factor that underlies all three?", "qf": "4. Nichiren provides a three-point explanation as to why votaries of the Lotus Sutra incur persecution. What is the common factor that underlies all three?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 12", "qid": "page-68-q5", "q": "1. “Likewise, the Contemplation on the Mind-Ground Sutra states: ‘If you want to understand the causes that existed in the past, look at the results as they are manifested in the ____________________. And if you want to understand what results will be manifested in the future, look at the causes tha", "qf": "1. “Likewise, the Contemplation on the Mind-Ground Sutra states: ‘If you want to understand the causes that existed in the past, look at the results as they are manifested in the ____________________. And if you want to understand what results will be manifested in the future, look at the causes that exist in the"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 12", "qid": "page-68-q6", "q": "2. “The ‘Never Disparaging’ chapter of the Lotus Sutra says, ‘when his ____________________ had been wiped out [he attained the Buddha way].’ This indicates that Bodhisattva Never Disparaging was attacked with tiles and stones because he had in the past committed the offense of", "qf": "2. “The ‘Never Disparaging’ chapter of the Lotus Sutra says, ‘when his ____________________ had been wiped out [he attained the Buddha way].’ This indicates that Bodhisattva Never Disparaging was attacked with tiles and stones because he had in the past committed the offense of"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 13", "qid": "page-72-q1", "q": "1. Nichiren states: “Whether tempted by good or threatened by evil, if one casts aside the Lotus Sutra, one destines oneself for hell. Here I will make a great vow.” (WND-1, 280). a) What example does Nichiren provide of being “tempted by good”?", "qf": "1. Nichiren states: “Whether tempted by good or threatened by evil, if one casts aside the Lotus Sutra, one destines oneself for hell. Here I will make a great vow.” (WND-1, 280). a) What example does Nichiren provide of being “tempted by good”?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 13", "qid": "page-72-q1b", "q": "b) What example does Nichiren provide of being “threatened by evil”?", "qf": "1. Nichiren states: “Whether tempted by good or threatened by evil, if one casts aside the Lotus Sutra, one destines oneself for hell. Here I will make a great vow.” (WND-1, 280). b) What example does Nichiren provide of being “threatened by evil”?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 13", "qid": "page-72-q1c", "q": "c) What should one do when offered either rewards for abandoning the Lotus Sutra or threatened for upholding it?", "qf": "1. Nichiren states: “Whether tempted by good or threatened by evil, if one casts aside the Lotus Sutra, one destines oneself for hell. Here I will make a great vow.” (WND-1, 280). c) What should one do when offered either rewards for abandoning the Lotus Sutra or threatened for upholding it?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 13", "qid": "page-72-q2", "q": "2. In this writing, Nichiren famously vows to be the “pillar,” “eyes” and “great ship” of Japan (see WND-1, 280–81). What do these three symbols represent?", "qf": "2. In this writing, Nichiren famously vows to be the “pillar,” “eyes” and “great ship” of Japan (see WND-1, 280–81). What do these three symbols represent?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 13", "qid": "page-72-q3", "q": "1. “This I will state. Let the ____________________ forsake me. Let all ____________________ assail me. Still I will give my life for the sake of the Law.” (WND-1, 280)", "qf": "1. “This I will state. Let the ____________________ forsake me. Let all ____________________ assail me. Still I will give my life for the sake of the Law.” (WND-1, 280)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 13", "qid": "page-72-q4", "q": "2. “Whatever obstacles I might encounter, so long as ____________________ do not prove my teachings to be false, I will never yield! All other troubles are no more to me than ____________________.” (WND-1, 280)", "qf": "2. “Whatever obstacles I might encounter, so long as ____________________ do not prove my teachings to be false, I will never yield! All other troubles are no more to me than ____________________.” (WND-1, 280)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 13", "qid": "page-72-q5", "q": "3. “I will be the pillar of Japan. I will be the eyes of Japan. I will be the great of Japan. This is my ____________________, and I will ____________________!” (WND-1, 280–81)", "qf": "3. “I will be the pillar of Japan. I will be the eyes of Japan. I will be the great of Japan. This is my ____________________, and I will ____________________!” (WND-1, 280–81)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 14", "qid": "page-76-q1", "q": "1. Based on the background about the key passage, what is the fundamental cause of falling into an endless cycle of rebirth in the evil paths?", "qf": "1. Based on the background about the key passage, what is the fundamental cause of falling into an endless cycle of rebirth in the evil paths?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 14", "qid": "page-76-q2", "q": "2. According to Nichiren, why do great difficulties arise when he admonishes those who slander the Law?", "qf": "2. According to Nichiren, why do great difficulties arise when he admonishes those who slander the Law?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 14", "qid": "page-76-q3", "q": "3. What does the principle of “lessening one’s karmic retribution” describe?", "qf": "3. What does the principle of “lessening one’s karmic retribution” describe?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 14", "qid": "page-76-q4", "q": "4. In the key passage, Nichiren uses several metaphors to illustrate his struggle to defend the Law. What examples does he liken his struggle to?", "qf": "4. In the key passage, Nichiren uses several metaphors to illustrate his struggle to defend the Law. What examples does he liken his struggle to?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 14", "qid": "page-76-q5", "q": "5. In Ikeda Sensei’s lecture, what are the three aspects of changing karma that he discusses?", "qf": "5. In Ikeda Sensei’s lecture, what are the three aspects of changing karma that he discusses?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 14", "qid": "page-76-q6", "q": "1. Likewise, when I vigorously berate those throughout the country who ____________________ the Law, I meet with great difficulties. It must be that my actions in ____________________ the Law in this present life are calling forth retributions for the grave offenses of my past. (WND-1, 282)", "qf": "1. Likewise, when I vigorously berate those throughout the country who ____________________ the Law, I meet with great difficulties. It must be that my actions in ____________________ the Law in this present life are calling forth retributions for the grave offenses of my past. (WND-1, 282)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 15", "qid": "page-80-q1", "q": "1. According to Nichiren, what is the essential requirement for attaining Buddhahood while encountering difficulties?", "qf": "1. According to Nichiren, what is the essential requirement for attaining Buddhahood while encountering difficulties?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 15", "qid": "page-80-q2", "q": "2. What does the phrase “I and my disciples” reveal about the mentor-disciple relationship?", "qf": "2. What does the phrase “I and my disciples” reveal about the mentor-disciple relationship?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 15", "qid": "page-80-q3", "q": "3. According to the key passage, who could be considered Nichiren’s true disciples?", "qf": "3. According to the key passage, who could be considered Nichiren’s true disciples?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 15", "qid": "page-80-q4", "q": "1. Although I and my disciples may encounter various difficulties, if we ______________________________ in our hearts, we will as a matter of course ______________________________. Do not have doubts simply because heaven does not lend you protection. Do not be discouraged because you do not enjoy _", "qf": "1. Although I and my disciples may encounter various difficulties, if we ______________________________ in our hearts, we will as a matter of course ______________________________. Do not have doubts simply because heaven does not lend you protection. Do not be discouraged because you do not enjoy ______________________________ in this life. This is what I have taught my disciples morning and evening, and yet they begin to ______________________________. Foolish men are likely to forget the promises they have made when the crucial moment comes. (WND-1, 283)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 16", "qid": "page-87-q1", "q": "1. Many Buddhist teachers during Nichiren’s day urged their followers to abandon the Lotus Sutra. Nichiren openly admonished these teachers—for they were leading people to suffering. In response, many accused Nichiren of having a “contentious heart.” But Nichiren was not motivated by hostility. What", "qf": "1. Many Buddhist teachers during Nichiren’s day urged their followers to abandon the Lotus Sutra. Nichiren openly admonished these teachers—for they were leading people to suffering. In response, many accused Nichiren of having a “contentious heart.” But Nichiren was not motivated by hostility. What spurred him to take action for the happiness of all people?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 16", "qid": "page-87-q2", "q": "2. What are the two methods of Buddhist propagation Nichiren discusses?", "qf": "2. What are the two methods of Buddhist propagation Nichiren discusses?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 16", "qid": "page-87-q3", "q": "3. According to Nichiren, when should shakubuku be the primary method of propagation?", "qf": "3. According to Nichiren, when should shakubuku be the primary method of propagation?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 16", "qid": "page-87-q4", "q": "4. In “The Opening of the Eyes,” Nichiren quotes a commentary by Chang-an that mentions a person who befriends another but lacks the mercy to correct their errors. How does this quote describe such a person?", "qf": "4. In “The Opening of the Eyes,” Nichiren quotes a commentary by Chang-an that mentions a person who befriends another but lacks the mercy to correct their errors. How does this quote describe such a person?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 16", "qid": "page-87-q5", "q": "1. When the country is full of evil people without wisdom, then ______________________________ is the primary method to be applied, as described in the “Peaceful Practices” chapter. But at a time when there are many people of perverse views who slander the Law, then _____________________________ sho", "qf": "1. When the country is full of evil people without wisdom, then ______________________________ is the primary method to be applied, as described in the “Peaceful Practices” chapter. But at a time when there are many people of perverse views who slander the Law, then _____________________________ should come first, as described in the “Never Disparaging” chapter. (WND-1, 285)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 16", "qid": "page-87-q6", "q": "2. If one befriends another person but ______________________________, one is in fact his enemy. But one who ______________________________ is a voice-hearer who defends the Buddha’s teachings, a true disciple of the Buddha. One who ______________________________ is acting as his parent.", "qf": "2. If one befriends another person but ______________________________, one is in fact his enemy. But one who ______________________________ is a voice-hearer who defends the Buddha’s teachings, a true disciple of the Buddha. One who ______________________________ is acting as his parent."}, {"sec": "WORKBOOK QUESTIONS—CHAPTERS 17 & 18", "qid": "page-94-q1", "q": "1. Nichiren quotes the Lotus Sutra's “Treasure Tower” chapter to discuss the gathering of Shakyamuni, Many Treasures and the Buddhas of the ten directions. Why did these Buddhas gather?", "qf": "1. Nichiren quotes the Lotus Sutra's “Treasure Tower” chapter to discuss the gathering of Shakyamuni, Many Treasures and the Buddhas of the ten directions. Why did these Buddhas gather?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTERS 17 & 18", "qid": "page-94-q2", "q": "2. Nichiren declares himself to be sovereign, teacher and parent to all the people of Japan. Which of Nichiren's qualities does Ikeda Sensei identify as that qualify him in fulfilling each of these three benevolent functions?", "qf": "2. Nichiren declares himself to be sovereign, teacher and parent to all the people of Japan. Which of Nichiren's qualities does Ikeda Sensei identify as that qualify him in fulfilling each of these three benevolent functions?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTERS 17 & 18", "qid": "page-94-q4", "q": "4. What is the fundamental cause of suffering?", "qf": "4. What is the fundamental cause of suffering?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTERS 17 & 18", "qid": "page-94-q5", "q": "5. The phrase \"seed of Buddhahood\" contains two meanings. What are they?", "qf": "5. The phrase \"seed of Buddhahood\" contains two meanings. What are they?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTERS 17 & 18", "qid": "page-94-q3", "q": "1. “I, Nichiren, am _____________________, _____________________, and father and mother to all the people of Japan.” (WND-1, 287)", "qf": "1. “I, Nichiren, am _____________________, _____________________, and father and mother to all the people of Japan.” (WND-1, 287)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 19", "qid": "page-98-q1", "q": "1. Nichiren states, “To be praised by fools, that is the greatest shame.” What does he mean by this?", "qf": "1. Nichiren states, “To be praised by fools, that is the greatest shame.” What does he mean by this?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 19", "qid": "page-98-q2", "q": "2. How do the examples of Shakyamuni, Kumarajiva, Dengyo and other Buddhist practitioners support T’ien-t’ai’s principle that “the method chosen should be that which accords with the time”?", "qf": "2. How do the examples of Shakyamuni, Kumarajiva, Dengyo and other Buddhist practitioners support T’ien-t’ai’s principle that “the method chosen should be that which accords with the time”?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 19", "qid": "page-98-q3", "q": "3. Nichiren describes his exile to Sado as “a small suffering to undergo in this present life.” Why does he say this?", "qf": "3. Nichiren describes his exile to Sado as “a small suffering to undergo in this present life.” Why does he say this?"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 19", "qid": "page-98-q4", "q": "1. [As Chang-an has noted,] “One who rids the offender of evil is acting as ____________________.”", "qf": "1. [As Chang-an has noted,] “One who rids the offender of evil is acting as ____________________.”"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 19", "qid": "page-98-q5", "q": "2. To be ____________________ by fools—that is the greatest shame. Now that I, Nichiren, have incurred the wrath of the authorities, the priests of the Tendai and True Word schools are no doubt delighted. They are strange and shameless men. (WND-1, 287)", "qf": "2. To be ____________________ by fools—that is the greatest shame. Now that I, Nichiren, have incurred the wrath of the authorities, the priests of the Tendai and True Word schools are no doubt delighted. They are strange and shameless men. (WND-1, 287)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 19", "qid": "page-98-q6", "q": "3. T’ien-t’ai has said that “the method chosen should be that which accords with the time.” The propagation of the Buddhist teachings should ______________________________. (WND-1, 287)", "qf": "3. T’ien-t’ai has said that “the method chosen should be that which accords with the time.” The propagation of the Buddhist teachings should ______________________________. (WND-1, 287)"}, {"sec": "WORKBOOK QUESTIONS—CHAPTER 19", "qid": "page-98-q7", "q": "4. For what I have done, I have been condemned to exile, but it is a ____________________ to undergo in this present life and not one worth ____________________. In future lives I will enjoy immense happiness, a thought that gives me ____________________. (WND-1, 287)", "qf": "4. For what I have done, I have been condemned to exile, but it is a ____________________ to undergo in this present life and not one worth ____________________. In future lives I will enjoy immense happiness, a thought that gives me ____________________. (WND-1, 287)"}, {"sec": "Part 1: The Essence of the Priesthood Issue", "qid": "independence-workbook-q1", "q": "1. With Nichiren Daishonin’s writings as its foundation, the Soka Gakkai endeavors to stand upon the fundamental principle that “all people are equal, and all people can become Buddhas.” In contrast, what has Nichiren Shoshu prioritized?", "qf": "1. With Nichiren Daishonin’s writings as its foundation, the Soka Gakkai endeavors to stand upon the fundamental principle that “all people are equal, and all people can become Buddhas.” In contrast, what has Nichiren Shoshu prioritized?"}, {"sec": "Part 1: The Essence of the Priesthood Issue", "qid": "independence-workbook-q2", "q": "2. Among the concrete plans and actions to advance worldwide kosen-rufu, what three did Ikeda Sensei highlight in volumes 17 and 27 of The New Human Revolution?", "qf": "2. Among the concrete plans and actions to advance worldwide kosen-rufu, what three did Ikeda Sensei highlight in volumes 17 and 27 of The New Human Revolution?"}, {"sec": "Part 1: The Essence of the Priesthood Issue", "qid": "independence-workbook-q3", "q": "3. Hoping to protect Soka Gakkai members and restore harmony between the priesthood and laity, what did Ikeda Sensei do on April 24, 1979, to resolve the first priesthood issue?", "qf": "3. Hoping to protect Soka Gakkai members and restore harmony between the priesthood and laity, what did Ikeda Sensei do on April 24, 1979, to resolve the first priesthood issue?"}, {"sec": "Part 1: The Essence of the Priesthood Issue", "qid": "independence-workbook-q4", "q": "4. After becoming high priest, Nikken Abe grew jealous and hostile toward the Soka Gakkai. What plot did Nikken devise and put into action to place Soka Gakkai members under the control of the priesthood?", "qf": "4. After becoming high priest, Nikken Abe grew jealous and hostile toward the Soka Gakkai. What plot did Nikken devise and put into action to place Soka Gakkai members under the control of the priesthood?"}, {"sec": "Part 1: The Essence of the Priesthood Issue", "qid": "independence-workbook-q5", "q": "5. Leading up to the Soka Gakkai’s excommunication on November 28, 1991, what steps were involved in Nikken’s plot?", "qf": "5. Leading up to the Soka Gakkai’s excommunication on November 28, 1991, what steps were involved in Nikken’s plot?"}, {"sec": "Part 1: The Essence of the Priesthood Issue", "qid": "independence-workbook-q6", "q": "6. How did Ikeda Sensei respond to the “Notice of the Excommunication of the Soka Gakkai” sent by the Nichiren Shoshu priesthood on November 28, 1991?", "qf": "6. How did Ikeda Sensei respond to the “Notice of the Excommunication of the Soka Gakkai” sent by the Nichiren Shoshu priesthood on November 28, 1991?"}, {"sec": "Part 3: The Grave Offenses and False Doctrines of the Nikken Sect", "qid": "page-119-q1", "q": "7. Ikeda Sensei writes: “A major catalyst for the dynamic development of the Soka Gakkai, which was energetically advancing worldwide kosen-rufu, was its attainment of spiritual independence from the corrupt and ossified Nichiren Shoshu priesthood” (The New Human Revolution, vol. 30, p. 836). In con", "qf": "7. Ikeda Sensei writes: “A major catalyst for the dynamic development of the Soka Gakkai, which was energetically advancing worldwide kosen-rufu, was its attainment of spiritual independence from the corrupt and ossified Nichiren Shoshu priesthood” (The New Human Revolution, vol. 30, p. 836). In contrast, what kind of behavior and actions did the priesthood increasingly adopt toward the lay members of the Soka Gakkai?"}, {"sec": "Part 3: The Grave Offenses and False Doctrines of the Nikken Sect", "qid": "page-119-q2", "q": "8. In contrast to the priesthood, the Soka Gakkai rose up to carry out a religious reformation and remonstrated with the priesthood. What motto did the Soka Gakkai adopt as its rallying cry in this struggle?", "qf": "8. In contrast to the priesthood, the Soka Gakkai rose up to carry out a religious reformation and remonstrated with the priesthood. What motto did the Soka Gakkai adopt as its rallying cry in this struggle?"}, {"sec": "Part 3: The Grave Offenses and False Doctrines of the Nikken Sect", "qid": "page-119-q3", "q": "9. What are the four “grave offenses” committed by the Nikken sect? And what is the correct way to understand each point based on Nichiren Daishonin’s teaching?", "qf": "9. What are the four “grave offenses” committed by the Nikken sect? And what is the correct way to understand each point based on Nichiren Daishonin’s teaching?"}, {"sec": "Part 3: The Grave Offenses and False Doctrines of the Nikken Sect", "qid": "page-119-q4", "q": "10. In 1993, convinced that the priesthood under Nikken was violating the Daishonin’s teachings, and supported by a reformist priest, what did the Soka Gakkai decide to do for its members to fulfill its mission of kosen-rufu?", "qf": "10. In 1993, convinced that the priesthood under Nikken was violating the Daishonin’s teachings, and supported by a reformist priest, what did the Soka Gakkai decide to do for its members to fulfill its mission of kosen-rufu?"}, {"sec": "Part 3: The Grave Offenses and False Doctrines of the Nikken Sect", "qid": "page-119-q5", "q": "11. What key themes are at the heart of Ikeda Sensei’s writings and study lectures on Nichiren Daishonin’s writings?", "qf": "11. What key themes are at the heart of Ikeda Sensei’s writings and study lectures on Nichiren Daishonin’s writings?"}, {"sec": "Part 6: The Hall of the Great Vow for Kosen-rufu", "qid": "page-120-q1", "q": "12. What is the significance or purpose of the Hall of the Great Vow for Kosen-rufu, which opened in 2013?", "qf": "12. What is the significance or purpose of the Hall of the Great Vow for Kosen-rufu, which opened in 2013?"}, {"sec": "Part 6: The Hall of the Great Vow for Kosen-rufu", "qid": "page-120-q2", "q": "13. The Nichiren Shoshu priesthood has embraced erroneous doctrines that are contrary to Nichiren Daishonin’s teachings, rooted in its mistaken interpretation of the Three Great Secret Laws—the core principles of Nichiren Buddhism. As a result, its head temple has become a place of great slander and", "qf": "13. The Nichiren Shoshu priesthood has embraced erroneous doctrines that are contrary to Nichiren Daishonin’s teachings, rooted in its mistaken interpretation of the Three Great Secret Laws—the core principles of Nichiren Buddhism. As a result, its head temple has become a place of great slander and can never be the sanctuary of the essential teaching. In contrast, according to the Soka Gakkai, what constitutes the sanctuary of the essential teaching?"}, {"sec": "Part 6: The Hall of the Great Vow for Kosen-rufu", "qid": "page-120-q3", "q": "14. What is the daimoku of the essential teaching?", "qf": "14. What is the daimoku of the essential teaching?"}, {"sec": "Part 6: The Hall of the Great Vow for Kosen-rufu", "qid": "page-120-q4", "q": "15. The Soka Gakkai alone embodies the vast compassion of Nichiren Daishonin and is spreading the teaching of Nam-myoho-renge-kyo in this tumultuous and confused saha world. Based on these points, what did second Soka Gakkai President Josei Toda declare that the organization be called?", "qf": "15. The Soka Gakkai alone embodies the vast compassion of Nichiren Daishonin and is spreading the teaching of Nam-myoho-renge-kyo in this tumultuous and confused saha world. Based on these points, what did second Soka Gakkai President Josei Toda declare that the organization be called?"}, {"sec": "Part 6: The Hall of the Great Vow for Kosen-rufu", "qid": "page-120-q5", "q": "16. It has become apparent that the priesthood has lost sight of Nichiren Daishonin’s teachings. In contrast, the Soka Gakkai endeavors to apply Nichiren’s teaching and advance kosen-rufu as a world religion. In The New Human Revolution, vol. 30, what are the six requisite qualities of a world relig", "qf": "16. It has become apparent that the priesthood has lost sight of Nichiren Daishonin’s teachings. In contrast, the Soka Gakkai endeavors to apply Nichiren’s teaching and advance kosen-rufu as a world religion. In The New Human Revolution, vol. 30, what are the six requisite qualities of a world religion that Ikeda Sensei outlined?"}, {"sec": "Part 9: A Time of Transformation for Humanity to ‘Cast Off the Transient and Rev", "qid": "page-121-q1", "q": "17. During the Tatsunokuchi Persecution, Nichiren Daishonin “cast off the transient and revealed the true.” What did he “open up” and what did he manifest?", "qf": "17. During the Tatsunokuchi Persecution, Nichiren Daishonin “cast off the transient and revealed the true.” What did he “open up” and what did he manifest?"}, {"sec": "Part 9: A Time of Transformation for Humanity to ‘Cast Off the Transient and Rev", "qid": "page-121-q2", "q": "18. How does the Soka Gakkai “cast off the transient and reveal the true”?", "qf": "18. How does the Soka Gakkai “cast off the transient and reveal the true”?"}];
 </script>
 <script>
+window.__FIREBASE_CONFIG__ = {"apiKey": "AIzaSyAbKRNzNN5e7LZnA5DXl5OiURi-bD-I0rc", "appId": "1:415569797520:web:3bbef647d77d705b111315", "authDomain": "sgi-study-guide-sync.firebaseapp.com", "messagingSenderId": "415569797520", "projectId": "sgi-study-guide-sync", "storageBucket": "sgi-study-guide-sync.firebasestorage.app"};
+</script>
+<script>
+/* Pure sync merge/diff logic for the SGI study guide app.
+   No DOM, no Firebase — safe to unit-test in Node and inline in the page.
+
+   DATA SHAPES
+   - syncData: the synced subset of the local store:
+       { answers:{qid:string}, notes:[{id,sec,text,ts}], highlights:[{id,sec,...}],
+         bookmarks:{secId:{title,ts,y}}, dontknow:[{d:"q"|"p", i:number}],
+         pos:{sec,y}|null }
+     Prefs (text size, theme) are deliberately NOT synced: they are per-device.
+   - ts (timestamps): { answers:{qid:ms}, notes:{id:ms}, highlights:{id:ms},
+       bookmarks:{secId:ms}, dontknow:{"q:3":ms}, pos:ms }
+     Last-write time of each item. Local edits stamp Date.now() via
+     diffLocalChanges; items synced from the cloud carry the cloud's stamps.
+   - del (tombstones): same key shape as ts. del[k] = ms means "k was deleted
+     at ms". A tombstone only kills a copy whose timestamp is NOT newer than
+     the tombstone (a copy written after the delete is a re-creation and wins).
+     Tombstones are pruned after TOMBSTONE_TTL_MS; a device that stays offline
+     longer than that could resurrect a deleted item — accepted edge case.
+
+   MERGE RULES (mergeStates)
+   - Keyed collections (answers, notes, highlights, bookmarks, dontknow):
+     per item, newer timestamp wins; a tombstone at least as new as the other
+     side's copy deletes it; ties go to the cloud (only reachable on a first
+     merge, where local items have no timestamps yet — the cloud copy is the
+     deliberate sync record, so it wins).
+   - Reading position: newer timestamp wins; tie goes to the cloud.
+   - Result keeps the winning tombstones only for items still deleted.
+*/
+(function (root, factory) {
+  var api = factory();
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  else root.SGSync = api;
+})(typeof self !== "undefined" ? self : this, function () {
+  "use strict";
+
+  var TOMBSTONE_TTL_MS = 90 * 24 * 3600 * 1000; // 90 days
+
+  function isObj(x) { return x && typeof x === "object" && !Array.isArray(x); }
+  function clone(x) { return x === undefined ? undefined : JSON.parse(JSON.stringify(x)); }
+  function same(a, b) {
+    var ja = JSON.stringify(a === undefined ? null : a);
+    var jb = JSON.stringify(b === undefined ? null : b);
+    return ja === jb;
+  }
+  function dkKey(w) { return w.d + ":" + w.i; }
+  function dkVal(k) {
+    var p = String(k).split(":");
+    return { d: p[0], i: parseInt(p[1], 10) };
+  }
+  function mapKeys(m) { return Object.keys(m || {}); }
+  function unionKeys() {
+    var out = {}, i, k;
+    for (i = 0; i < arguments.length; i++) {
+      var m = arguments[i] || {};
+      for (k in m) out[k] = true;
+    }
+    return Object.keys(out);
+  }
+
+  function emptyData() {
+    return { answers: {}, notes: [], highlights: [], bookmarks: {}, dontknow: [], pos: null };
+  }
+  function emptyTs() {
+    return { answers: {}, notes: {}, highlights: {}, bookmarks: {}, dontknow: {}, pos: 0 };
+  }
+  function emptyDel() {
+    return { answers: {}, notes: {}, highlights: {}, bookmarks: {}, dontknow: {} };
+  }
+
+  function normData(d) {
+    var out = emptyData();
+    if (!isObj(d)) return out;
+    if (isObj(d.answers)) out.answers = clone(d.answers);
+    if (Array.isArray(d.notes)) out.notes = clone(d.notes);
+    if (Array.isArray(d.highlights)) out.highlights = clone(d.highlights);
+    if (isObj(d.bookmarks)) out.bookmarks = clone(d.bookmarks);
+    if (Array.isArray(d.dontknow)) out.dontknow = clone(d.dontknow);
+    if (isObj(d.pos)) out.pos = clone(d.pos);
+    return out;
+  }
+  function normTs(t) {
+    var out = emptyTs();
+    if (!isObj(t)) return out;
+    ["answers", "notes", "highlights", "bookmarks", "dontknow"].forEach(function (c) {
+      if (isObj(t[c])) out[c] = clone(t[c]);
+    });
+    if (typeof t.pos === "number") out.pos = t.pos;
+    return out;
+  }
+  function normDel(d) {
+    var out = emptyDel();
+    if (!isObj(d)) return out;
+    ["answers", "notes", "highlights", "bookmarks", "dontknow"].forEach(function (c) {
+      if (isObj(d[c])) out[c] = clone(d[c]);
+    });
+    return out;
+  }
+  function pruneDel(del, now) {
+    var out = emptyDel(), c, k;
+    for (c in del) {
+      for (k in del[c]) {
+        if (typeof del[c][k] === "number" && now - del[c][k] <= TOMBSTONE_TTL_MS) out[c][k] = del[c][k];
+      }
+    }
+    return out;
+  }
+
+  /* Merge one keyed collection. lMap/cMap are {key: value}; lTs/cTs are
+     {key: ms}; lDel/cDel are {key: ms}. Returns {map, ts, del}. */
+  function mergeKeyed(lMap, lTs, lDel, cMap, cTs, cDel, now) {
+    var map = {}, ts = {}, del = {};
+    unionKeys(lMap, cMap, lDel, cDel).forEach(function (k) {
+      var lv = lMap ? lMap[k] : undefined;
+      var cv = cMap ? cMap[k] : undefined;
+      var lts = (lTs && lTs[k]) || 0;
+      var cts = (cTs && cTs[k]) || 0;
+      var ld = (lDel && lDel[k]) || 0;
+      var cd = (cDel && cDel[k]) || 0;
+      // A copy survives the other side's tombstone only if written after it.
+      var lAlive = lv !== undefined && !(cd && cd >= lts);
+      var cAlive = cv !== undefined && !(ld && ld >= cts);
+      if (lAlive && cAlive) {
+        if (lts > cts) { map[k] = clone(lv); ts[k] = lts; }
+        else { map[k] = clone(cv); ts[k] = cts; } // tie -> cloud
+      } else if (lAlive) { map[k] = clone(lv); ts[k] = lts; }
+      else if (cAlive) { map[k] = clone(cv); ts[k] = cts; }
+      else {
+        // Deleted on at least one side and not re-created newer: keep the
+        // newest tombstone so the delete propagates to a stale third copy.
+        var tomb = Math.max(ld, cd);
+        if (tomb && now - tomb <= TOMBSTONE_TTL_MS) del[k] = tomb;
+      }
+    });
+    return { map: map, ts: ts, del: del };
+  }
+
+  function arrToMap(arr, keyFn) {
+    var m = {};
+    (arr || []).forEach(function (it) { m[keyFn(it)] = it; });
+    return m;
+  }
+
+  /* Merge local state with a cloud doc (null = no doc yet).
+     local: {data, ts, del}; cloud: null or {data, ts, del} (raw doc fields).
+     Returns {data, ts, del, changedLocal, changedCloud}. */
+  function mergeStates(local, cloud, now) {
+    now = now || Date.now();
+    var lData = normData(local && local.data);
+    var lTs = normTs(local && local.ts);
+    var lDel = pruneDel(normDel(local && local.del), now);
+    if (!cloud || !isObj(cloud.data)) {
+      // No cloud doc: local is the whole truth; keep its stamps.
+      return { data: lData, ts: lTs, del: lDel, changedLocal: false, changedCloud: true };
+    }
+    var cData = normData(cloud.data);
+    var cTs = normTs(cloud.ts);
+    var cDel = pruneDel(normDel(cloud.del), now);
+
+    var out = emptyData(), outTs = emptyTs(), outDel = emptyDel();
+
+    var mAns = mergeKeyed(lData.answers, lTs.answers, lDel.answers,
+                          cData.answers, cTs.answers, cDel.answers, now);
+    out.answers = mAns.map; outTs.answers = mAns.ts; outDel.answers = mAns.del;
+
+    var mBm = mergeKeyed(lData.bookmarks, lTs.bookmarks, lDel.bookmarks,
+                         cData.bookmarks, cTs.bookmarks, cDel.bookmarks, now);
+    out.bookmarks = mBm.map; outTs.bookmarks = mBm.ts; outDel.bookmarks = mBm.del;
+
+    var lNotes = arrToMap(lData.notes, function (n) { return n.id; });
+    var cNotes = arrToMap(cData.notes, function (n) { return n.id; });
+    var mNotes = mergeKeyed(lNotes, lTs.notes, lDel.notes,
+                            cNotes, cTs.notes, cDel.notes, now);
+    out.notes = mapKeys(mNotes.map).map(function (k) { return mNotes.map[k]; })
+      .sort(function (a, b) { return (a.ts || 0) - (b.ts || 0); });
+    outTs.notes = mNotes.ts; outDel.notes = mNotes.del;
+
+    var lHl = arrToMap(lData.highlights, function (h) { return h.id; });
+    var cHl = arrToMap(cData.highlights, function (h) { return h.id; });
+    var mHl = mergeKeyed(lHl, lTs.highlights, lDel.highlights,
+                         cHl, cTs.highlights, cDel.highlights, now);
+    out.highlights = mapKeys(mHl.map).map(function (k) { return mHl.map[k]; })
+      .sort(function (a, b) {
+        if (a.sec !== b.sec) return a.sec < b.sec ? -1 : 1;
+        return (a.start || 0) - (b.start || 0);
+      });
+    outTs.highlights = mHl.ts; outDel.highlights = mHl.del;
+
+    var lDk = {}, cDk = {};
+    lData.dontknow.forEach(function (w) { lDk[dkKey(w)] = w; });
+    cData.dontknow.forEach(function (w) { cDk[dkKey(w)] = w; });
+    var mDk = mergeKeyed(lDk, lTs.dontknow, lDel.dontknow,
+                         cDk, cTs.dontknow, cDel.dontknow, now);
+    out.dontknow = mapKeys(mDk.map).map(function (k) { return dkVal(k); })
+      .sort(function (a, b) {
+        if (a.d !== b.d) return a.d < b.d ? -1 : 1;
+        return a.i - b.i;
+      });
+    outTs.dontknow = mDk.ts; outDel.dontknow = mDk.del;
+
+    // Reading position: newer wins; tie -> cloud.
+    var lPos = lData.pos, cPos = cData.pos;
+    if (!lPos && !cPos) { out.pos = null; outTs.pos = Math.max(lTs.pos || 0, cTs.pos || 0); }
+    else if (!lPos) { out.pos = clone(cPos); outTs.pos = cTs.pos || 0; }
+    else if (!cPos) { out.pos = clone(lPos); outTs.pos = lTs.pos || 0; }
+    else if ((lTs.pos || 0) > (cTs.pos || 0)) { out.pos = clone(lPos); outTs.pos = lTs.pos; }
+    else { out.pos = clone(cPos); outTs.pos = cTs.pos; }
+
+    return {
+      data: out, ts: outTs, del: outDel,
+      changedLocal: !same(out, lData),
+      changedCloud: !same(out, cData) || !same(outTs, cTs) || !same(outDel, cDel)
+    };
+  }
+
+  /* Diff current data against the last-synced snapshot; stamp "now" on every
+     added/changed item and tombstone every removed item. prevData null =
+     never synced: everything present is new. Returns {ts, del}. */
+  function diffLocalChanges(prevData, currData, prevTs, prevDel, now) {
+    now = now || Date.now();
+    var prev = normData(prevData);
+    var curr = normData(currData);
+    var ts = normTs(prevTs);
+    var del = pruneDel(normDel(prevDel), now);
+
+    function diffKeyed(prevMap, currMap, tsMap, delMap) {
+      unionKeys(prevMap, currMap).forEach(function (k) {
+        var inPrev = prevMap && prevMap[k] !== undefined;
+        var inCurr = currMap && currMap[k] !== undefined;
+        if (inCurr && (!inPrev || !same(prevMap[k], currMap[k]))) {
+          tsMap[k] = now;
+          delete delMap[k];
+        } else if (!inCurr && inPrev) {
+          delMap[k] = now;
+          delete tsMap[k];
+        }
+      });
+    }
+    diffKeyed(prev.answers, curr.answers, ts.answers, del.answers);
+    diffKeyed(prev.bookmarks, curr.bookmarks, ts.bookmarks, del.bookmarks);
+    diffKeyed(arrToMap(prev.notes, function (n) { return n.id; }),
+              arrToMap(curr.notes, function (n) { return n.id; }),
+              ts.notes, del.notes);
+    diffKeyed(arrToMap(prev.highlights, function (h) { return h.id; }),
+              arrToMap(curr.highlights, function (h) { return h.id; }),
+              ts.highlights, del.highlights);
+    var prevDk = {}, currDk = {};
+    prev.dontknow.forEach(function (w) { prevDk[dkKey(w)] = w; });
+    curr.dontknow.forEach(function (w) { currDk[dkKey(w)] = w; });
+    diffKeyed(prevDk, currDk, ts.dontknow, del.dontknow);
+    if (!same(prev.pos, curr.pos)) ts.pos = now;
+    return { ts: ts, del: del };
+  }
+
+  /* Pick the synced subset out of the full local store (prefs excluded). */
+  function extractSyncData(store) {
+    return normData(store);
+  }
+  /* Write merged synced data back into the full local store (in place). */
+  function applySyncData(store, data) {
+    var d = normData(data);
+    store.answers = d.answers;
+    store.notes = d.notes;
+    store.highlights = d.highlights;
+    store.bookmarks = d.bookmarks;
+    store.dontknow = d.dontknow;
+    store.pos = d.pos;
+    return store;
+  }
+
+  return {
+    TOMBSTONE_TTL_MS: TOMBSTONE_TTL_MS,
+    emptyData: emptyData,
+    emptyTs: emptyTs,
+    emptyDel: emptyDel,
+    normData: normData,
+    normTs: normTs,
+    normDel: normDel,
+    mergeStates: mergeStates,
+    diffLocalChanges: diffLocalChanges,
+    extractSyncData: extractSyncData,
+    applySyncData: applySyncData
+  };
+});
+
+</script>
+<script type="module">
+/* Firebase bootstrap for optional sync. Any failure here — offline,
+   blocked CDN — leaves the app in local-only mode; the reader never
+   depends on it. State is reported via window.__SG_FIREBASE_STATE__
+   ("loading" | "ready" | "unavailable") and the sg-firebase-ready /
+   sg-auth-changed events, which app.js listens for. */
+window.__SG_FIREBASE_STATE__ = "loading";
+try {
+  const [appMod, authMod, fsMod] = await Promise.all([
+    import("firebase/app"), import("firebase/auth"), import("firebase/firestore")
+  ]);
+  const fbApp = appMod.initializeApp(window.__FIREBASE_CONFIG__);
+  const fbAuth = authMod.getAuth(fbApp);
+  const fbDb = fsMod.getFirestore(fbApp);
+  const fbProvider = new authMod.GoogleAuthProvider();
+  // Complete a redirect sign-in if one is in flight.
+  try { await authMod.getRedirectResult(fbAuth); } catch (e) { /* no redirect pending */ }
+  window.FirebaseSync = {
+    getUser: function(){ return fbAuth.currentUser; },
+    signIn: async function(){
+      try { await authMod.signInWithPopup(fbAuth, fbProvider); }
+      catch (e) {
+        if (e && (e.code === "auth/popup-blocked" || e.code === "auth/operation-not-supported-in-this-environment")) {
+          await authMod.signInWithRedirect(fbAuth, fbProvider);
+        } else { throw e; }
+      }
+    },
+    signOut: function(){ return authMod.signOut(fbAuth); },
+    getDoc: async function(uid){
+      const snap = await fsMod.getDoc(fsMod.doc(fbDb, "users", uid));
+      return snap.exists() ? snap.data() : null;
+    },
+    setDoc: async function(uid, data){
+      await fsMod.setDoc(fsMod.doc(fbDb, "users", uid),
+        Object.assign({}, data, { updatedAt: fsMod.serverTimestamp() }));
+    }
+  };
+  window.__SG_FIREBASE_STATE__ = "ready";
+  window.dispatchEvent(new CustomEvent("sg-firebase-ready"));
+  authMod.onAuthStateChanged(fbAuth, function(user){
+    window.dispatchEvent(new CustomEvent("sg-auth-changed", { detail: {
+      user: user ? { uid: user.uid, email: user.email, displayName: user.displayName } : null
+    }}));
+  });
+} catch (err) {
+  window.__SG_FIREBASE_STATE__ = "unavailable";
+  window.dispatchEvent(new CustomEvent("sg-firebase-ready"));
+}
+</script>
+<script>
 /* SGI-USA Advanced Exam Study Guide — standalone app (no network, localStorage only) */
 (function(){
 "use strict";
@@ -1211,6 +1563,9 @@ function save(){
 }
 function saveNow(){
   try{ localStorage.setItem(LS_KEY, JSON.stringify(store)); }catch(e){}
+  // Sync hook: stamp any local change for the cloud push (no-op until the
+  // sync section below has initialised, and silent when nothing synced changed).
+  if(typeof noteLocalChange === "function") noteLocalChange();
 }
 function uid(p){
   return p + "_" + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
@@ -2164,6 +2519,7 @@ function renderProgress(){
     '<button type="button" class="tbtn quiz-start-btn" id="btnQuizStart">🎯 Start quiz</button>'+
     '<button type="button" class="tbtn quiz-start-btn" id="btnReviewSheet">📄 Review sheet</button>'+
     '</div>';
+  html += syncBoxHTML();
   html += rows.map(function(r){
     var p = r.total ? Math.round(r.ans/r.total*100) : 0;
     return '<div class="prog-row" data-prog-jump="'+r.id+'">'+
@@ -2174,6 +2530,12 @@ function renderProgress(){
   body.innerHTML = html;
 }
 $("progressBody").addEventListener("click", function(e){
+  var sy = e.target.closest("[data-sync-act]");
+  if(sy){
+    if(sy.getAttribute("data-sync-act") === "signin") syncSignIn();
+    else syncSignOut();
+    return;
+  }
   var row = e.target.closest("[data-prog-jump]");
   if(row){ jumpToSection(row.getAttribute("data-prog-jump")); return; }
   if(e.target.closest("#btnQuizStart")){ closeDrawer(); openQuiz(); }
@@ -2573,6 +2935,214 @@ document.addEventListener("keydown", function(e){
     else if(drawer.classList.contains("open")) closeDrawer();
     hideSelBar();
   }
+});
+
+/* ---------------- optional cloud sync (Firebase, Google sign-in) ----------------
+   Local-only by default and fully defensive: if the Firebase SDK never loads
+   (offline, blocked CDN) or the user never signs in, the app runs exactly as
+   before. localStorage is the source of truth; Firestore only carries merged
+   copies between this user's own devices (one document at users/{uid}).
+   Sync metadata (per-item timestamps, delete tombstones, last-synced
+   snapshot) lives in a SEPARATE localStorage key, so the store schema above
+   is untouched and existing saved data keeps working. */
+var SYNC_LS_KEY = "sgi-study-guide-v1-sync";
+var syncState = { available:false, user:null, status:"signedout", lastSyncAt:0, lastPullAt:0 };
+var syncPushing = false, syncPushQueued = false, syncPushT = null, syncRetryT = null;
+
+function blankSyncMeta(){
+  return { v:1, ts:(window.SGSync ? SGSync.emptyTs() : {answers:{}, notes:{}, highlights:{}, bookmarks:{}, dontknow:{}, pos:0}),
+           del:(window.SGSync ? SGSync.emptyDel() : {answers:{}, notes:{}, highlights:{}, bookmarks:{}, dontknow:{}}),
+           base:null };
+}
+function loadSyncMeta(){
+  try{
+    var raw = localStorage.getItem(SYNC_LS_KEY);
+    if(raw){
+      var m = JSON.parse(raw);
+      if(m && typeof m === "object" && m.ts && m.del){
+        m.base = (m.base && typeof m.base === "object") ? m.base : null;
+        return m;
+      }
+    }
+  }catch(e){}
+  return blankSyncMeta();
+}
+function saveSyncMeta(){
+  try{ localStorage.setItem(SYNC_LS_KEY, JSON.stringify(syncMeta)); }catch(e){}
+}
+var syncMeta = loadSyncMeta();
+
+function firebaseReady(){
+  return window.__SG_FIREBASE_STATE__ === "ready" && !!window.FirebaseSync;
+}
+/* Called after every local save: diff the store against the last-synced
+   snapshot, stamp what changed (or tombstone what was deleted), and queue a
+   debounced push. Silent when nothing in the synced subset changed. */
+function noteLocalChange(){
+  if(!syncMeta || !window.SGSync) return;
+  var diff = SGSync.diffLocalChanges(syncMeta.base, SGSync.extractSyncData(store),
+                                     syncMeta.ts, syncMeta.del, Date.now());
+  var changed = JSON.stringify(diff.ts) !== JSON.stringify(syncMeta.ts) ||
+                JSON.stringify(diff.del) !== JSON.stringify(syncMeta.del);
+  syncMeta.ts = diff.ts; syncMeta.del = diff.del;
+  if(changed){ saveSyncMeta(); schedulePush(); }
+}
+function schedulePush(){
+  if(!syncState.user || !firebaseReady()) return;
+  clearTimeout(syncPushT);
+  syncPushT = setTimeout(function(){ syncNow("local"); }, 2000);
+}
+function scheduleRetry(){
+  clearTimeout(syncRetryT);
+  syncRetryT = setTimeout(function(){ if(syncState.user) syncNow("retry"); }, 30000);
+}
+function syncStatusText(){
+  switch(syncState.status){
+    case "syncing": return "Syncing…";
+    case "synced":
+      return "Synced ✓" + (syncState.lastSyncAt ? " — " + new Date(syncState.lastSyncAt).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}) : "");
+    case "offline": return "Offline — will sync when you're back online.";
+    case "signedout": return "Signed out — saving on this device only.";
+    default: return "Signed in — syncing…";
+  }
+}
+function syncBoxHTML(){
+  var who = syncState.user && (syncState.user.displayName || syncState.user.email);
+  var inner = '<h4>Sync</h4>';
+  if(!syncState.available){
+    inner += '<div class="sync-status" id="syncStatus">' +
+      (window.__SG_FIREBASE_STATE__ === "unavailable"
+        ? "Sync unavailable — the sync service couldn't load. Everything still saves on this device."
+        : "Sync starting…") + '</div>' +
+      '<button type="button" class="tbtn" data-sync-act="signin" disabled>Sign in with Google</button>';
+  }else if(!syncState.user){
+    inner += '<div class="sync-status" id="syncStatus">Signed out — saving on this device only.</div>' +
+      '<button type="button" class="tbtn" data-sync-act="signin">Sign in with Google to sync</button>';
+  }else{
+    inner += '<div class="sync-account">Signed in as ' + esc(who || "Google account") + '</div>' +
+      '<div class="sync-status" id="syncStatus">' + esc(syncStatusText()) + '</div>' +
+      '<button type="button" class="tbtn" data-sync-act="signout">Sign out</button>';
+  }
+  return '<div class="sync-box">' + inner + '</div>';
+}
+function refreshSyncBox(){
+  var box = document.querySelector(".sync-box");
+  if(!box) return;
+  var tmp = document.createElement("div");
+  tmp.innerHTML = syncBoxHTML();
+  if(tmp.firstChild) box.replaceWith(tmp.firstChild);
+}
+function setSyncStatus(status){
+  syncState.status = status;
+  refreshSyncBox();
+}
+/* Re-render the reading view from the store after a pull changed it.
+   The focused field is never overwritten mid-typing. */
+function refreshAfterSync(){
+  Array.prototype.forEach.call(reader.querySelectorAll("textarea.answer, input.blank-answer"), function(ta){
+    var qid = ta.getAttribute("data-answer-id");
+    if(document.activeElement === ta) return;
+    ta.value = store.answers[qid] || "";
+  });
+  Array.prototype.forEach.call(reader.querySelectorAll(".qblock"), function(qb){
+    var qid = qb.getAttribute("data-qid");
+    var wrap = qb.querySelector(".answer-wrap");
+    var ind = wrap ? wrap.querySelector(".saved-ind") : null;
+    if(ind) ind.textContent = blankGroupHasText(qid) ? "Saved ✓" : "";
+  });
+  refreshBookmarkButtons();
+  renderAllNotes();
+  applyStoredHighlights();
+  renderMarks();
+  if(!$("tab-progress").classList.contains("hidden")) renderProgress();
+}
+/* Read-modify-write sync: pull the cloud doc, merge with local, apply any
+   cloud-newer items locally, and write back only if the cloud copy changed.
+   Safe when two devices push at once, because each push re-reads first. */
+function syncNow(reason){
+  if(!syncState.user || !firebaseReady()) return Promise.resolve(false);
+  if(syncPushing){ syncPushQueued = true; return Promise.resolve(false); }
+  syncPushing = true;
+  setSyncStatus("syncing");
+  var uid = syncState.user.uid;
+  var fb = window.FirebaseSync;
+  return fb.getDoc(uid).then(function(cloudDoc){
+    var local = { data: SGSync.extractSyncData(store), ts: syncMeta.ts, del: syncMeta.del };
+    var merged = SGSync.mergeStates(local, cloudDoc, Date.now());
+    syncMeta.ts = merged.ts; syncMeta.del = merged.del;
+    syncMeta.base = JSON.parse(JSON.stringify(merged.data));
+    saveSyncMeta();
+    if(merged.changedLocal){
+      SGSync.applySyncData(store, merged.data);
+      saveNow();
+      refreshAfterSync();
+    }
+    if(!merged.changedCloud){
+      syncState.lastSyncAt = Date.now();
+      setSyncStatus("synced");
+      return true;
+    }
+    return fb.setDoc(uid, { v:1, data: merged.data, ts: merged.ts, del: merged.del }).then(function(){
+      syncState.lastSyncAt = Date.now();
+      setSyncStatus("synced");
+      return true;
+    });
+  }).catch(function(){
+    // Offline or transient failure: local data is untouched; retry later.
+    setSyncStatus("offline");
+    scheduleRetry();
+    return false;
+  }).then(function(r){
+    syncPushing = false;
+    if(syncPushQueued){ syncPushQueued = false; schedulePush(); }
+    return r;
+  });
+}
+function syncSignIn(){
+  if(!firebaseReady()){
+    toast("Sync isn't available right now — check your connection and reload the page.");
+    return;
+  }
+  window.FirebaseSync.signIn().catch(function(err){
+    if(err && err.code === "auth/popup-closed-by-user") return; // user dismissed it
+    toast("Couldn't sign in — please try again.");
+  });
+}
+function syncSignOut(){
+  clearTimeout(syncRetryT);
+  if(window.FirebaseSync) window.FirebaseSync.signOut();
+}
+// The Firebase bootstrap (a deferred module script) reports through events;
+// the app never depends on it having run.
+window.addEventListener("sg-firebase-ready", function(){
+  syncState.available = (window.__SG_FIREBASE_STATE__ === "ready");
+  refreshSyncBox();
+});
+window.addEventListener("sg-auth-changed", function(e){
+  var u = (e.detail && e.detail.user) || null;
+  var wasUid = syncState.user && syncState.user.uid;
+  syncState.user = u;
+  if(u && u.uid !== wasUid){
+    setSyncStatus("syncing");
+    toast("Signed in — syncing…");
+    syncNow("signin");
+  }else if(!u){
+    clearTimeout(syncRetryT);
+    syncState.status = "signedout";
+  }
+  refreshSyncBox();
+});
+// Defensive: if the bootstrap already ran before these listeners attached.
+if(window.__SG_FIREBASE_STATE__ === "ready") syncState.available = true;
+// Pull when connectivity or the tab comes back.
+window.addEventListener("online", function(){ if(syncState.user) syncNow("online"); });
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState === "visible" && syncState.user) syncNow("visible");
+});
+window.addEventListener("focus", function(){
+  if(!syncState.user) return;
+  var now = Date.now();
+  if(now - syncState.lastPullAt > 60000){ syncState.lastPullAt = now; syncNow("focus"); }
 });
 
 /* ---------------- init ---------------- */
