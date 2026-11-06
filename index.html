@@ -3158,18 +3158,36 @@ refreshBookmarkButtons();
 renderAllNotes();
 applyStoredHighlights();
 renderMarks();
-// Add "Go to chapter" buttons on workbook questions: for each WORKBOOK section,
-// find the first content section of that chapter (walking back to the previous
-// workbook) and link each question to it.
+// Add "Go to chapter" buttons on workbook questions. A workbook section is
+// any section holding answer boxes: the chapter workbooks are titled
+// "WORKBOOK QUESTIONS—…", but the page-64 continuation and the
+// spiritual-independence workbook pages (118–121) carry reading-style
+// titles instead, so the title alone can't identify them.
 (function(){
-  var isWb = function(t){ return /WORKBOOK QUESTIONS/i.test(t || ""); };
-  sections.forEach(function(sec, idx){
-    if(!isWb(sec.getAttribute("data-title"))) return;
+  var isWb = function(sec){ return !!sec.querySelector(".qblock"); };
+  // Where "Go to chapter" lands: the independence workbook pages name
+  // their part in the title ("Part 3: …"), so jump straight to that
+  // part's reading section; otherwise walk back to the first content
+  // section of the chapter, skipping workbook pages directly before
+  // this one (continuation pages of the same workbook).
+  function chapterTarget(sec, idx){
+    var m = /^\s*Part\s+(\d+)\s*:/i.exec(sec.getAttribute("data-title") || "");
+    if(m){
+      var part = document.getElementById("independence-" + m[1]);
+      if(part) return part.id;
+    }
+    var i = idx - 1;
+    while(i >= 0 && isWb(sections[i])) i--;
     var target = null;
-    for(var i = idx - 1; i >= 0; i--){
-      if(isWb(sections[i].getAttribute("data-title"))) break;
+    for(; i >= 0; i--){
+      if(isWb(sections[i])) break;
       target = sections[i].id;
     }
+    return target;
+  }
+  sections.forEach(function(sec, idx){
+    if(!isWb(sec)) return;
+    var target = chapterTarget(sec, idx);
     if(!target) return;
     Array.prototype.forEach.call(sec.querySelectorAll(".qblock"), function(qb){
       if(qb.querySelector("[data-goto-chapter]")) return;
@@ -3239,7 +3257,7 @@ renderMarks();
       snapScrollRaf = null;
       if(!snap) return;
       var s = currentSection();
-      if(!s || !/WORKBOOK QUESTIONS/i.test(s.getAttribute("data-title") || "")) return;
+      if(!s || !isWb(s)) return;
       var best = null;
       var qbs = s.querySelectorAll(".qblock");
       for(var qi = 0; qi < qbs.length; qi++){
