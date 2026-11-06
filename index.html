@@ -3205,7 +3205,17 @@ renderMarks();
   // where the user was reading. × dismisses the snap session.
   var snap = null;
   var snapPill = $("snapPill"), snapGo = $("snapGo"), snapX = $("snapX");
-  function showSnapPill(label){ snapGo.textContent = label; snapPill.classList.remove("hidden"); }
+  // The pill is shown only while a snap session is active, no field is
+  // being typed in, and the page hasn't just scrolled: a fixed pill would
+  // otherwise sit on top of the lines being read (it covers ~2 lines at
+  // the bottom of the screen). It comes back ~1.2s after scrolling stops,
+  // so it's there when the user pauses to jump back.
+  var snapHideFocus = false, snapHideScroll = false, snapScrollT = null;
+  function refreshSnapPill(){
+    if(snap && !snapHideFocus && !snapHideScroll) snapPill.classList.remove("hidden");
+    else snapPill.classList.add("hidden");
+  }
+  function showSnapPill(label){ snapGo.textContent = label; refreshSnapPill(); }
   reader.addEventListener("click", function(e){
     var g = e.target.closest("[data-goto-chapter]");
     if(!g) return;
@@ -3236,15 +3246,15 @@ renderMarks();
       showSnapPill("↩ Back to question");
     }
   });
-  snapX.addEventListener("click", function(){ snap = null; snapPill.classList.add("hidden"); });
+  snapX.addEventListener("click", function(){ snap = null; refreshSnapPill(); });
   // The pill must never cover a field being typed in: hide it while any
   // input/textarea in the reader is focused, restore it on blur if a snap
   // session is still active.
   reader.addEventListener("focusin", function(e){
-    if(e.target.matches && e.target.matches("input, textarea")) snapPill.classList.add("hidden");
+    if(e.target.matches && e.target.matches("input, textarea")){ snapHideFocus = true; refreshSnapPill(); }
   });
   reader.addEventListener("focusout", function(e){
-    if(e.target.matches && e.target.matches("input, textarea") && snap) snapPill.classList.remove("hidden");
+    if(e.target.matches && e.target.matches("input, textarea")){ snapHideFocus = false; refreshSnapPill(); }
   });
   // The pill follows the question you're on: while a snap session is active
   // and you're scrolled within a workbook section, re-anchor to the question
@@ -3252,7 +3262,14 @@ renderMarks();
   // earlier (e.g. first) question after you've moved on.
   var snapScrollRaf = null;
   window.addEventListener("scroll", function(){
-    if(!snap || snapScrollRaf) return;
+    if(!snap) return;
+    // Hide the pill while scrolling so it never covers the lines being
+    // read; bring it back once scrolling has stopped for a moment.
+    snapHideScroll = true;
+    refreshSnapPill();
+    clearTimeout(snapScrollT);
+    snapScrollT = setTimeout(function(){ snapHideScroll = false; refreshSnapPill(); }, 1200);
+    if(snapScrollRaf) return;
     snapScrollRaf = requestAnimationFrame(function(){
       snapScrollRaf = null;
       if(!snap) return;
