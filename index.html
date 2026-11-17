@@ -3210,9 +3210,25 @@ renderMarks();
   // otherwise sit on top of the lines being read (it covers ~2 lines at
   // the bottom of the screen). It comes back ~1.2s after scrolling stops,
   // so it's there when the user pauses to jump back.
+  // It is also hidden while its destination is already on screen: after
+  // a snap jump lands on the question (or back at the reading spot) the
+  // pill would only cover the lines below it — e.g. Q3's passage right
+  // under Q2 (reported 2026-11-17). It comes back once the user scrolls
+  // the destination off-screen, which is when it's needed again.
   var snapHideFocus = false, snapHideScroll = false, snapScrollT = null;
+  function snapDestVisible(){
+    if(!snap) return false;
+    if(snap.mode === "question"){
+      var qb = snap.qid && reader.querySelector('.qblock[data-qid="' + snap.qid + '"]');
+      if(!qb) return false;
+      var r = qb.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight;
+    }
+    if(snap.readY == null) return false;
+    return Math.abs((window.scrollY || window.pageYOffset) - snap.readY) < window.innerHeight * 0.5;
+  }
   function refreshSnapPill(){
-    if(snap && !snapHideFocus && !snapHideScroll) snapPill.classList.remove("hidden");
+    if(snap && !snapHideFocus && !snapHideScroll && !snapDestVisible()) snapPill.classList.remove("hidden");
     else snapPill.classList.add("hidden");
   }
   function showSnapPill(label){ snapGo.textContent = label; refreshSnapPill(); }
