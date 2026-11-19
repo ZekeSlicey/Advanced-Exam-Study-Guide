@@ -3220,7 +3220,13 @@ renderMarks();
   // hide it — that kept the pill hidden for half a viewport of scrolling
   // after jumping back to the passage (reported 2026-11-18), leaving no
   // way back to the question until the user happened to scroll further.
+  // Finally, the pill must not sit on the text indefinitely while the
+  // user reads: once it has been visible for a few seconds without being
+  // tapped it hides itself (reported 2026-11-18 — it covered the sentence
+  // under it while Joel was reading). Any scroll brings it back, so the
+  // way back to the question is never more than a small scroll away.
   var snapHideFocus = false, snapHideScroll = false, snapScrollT = null;
+  var snapAutoHidden = false, snapAutoHideT = null;
   function snapDestVisible(){
     if(!snap) return false;
     if(snap.mode === "question"){
@@ -3232,10 +3238,17 @@ renderMarks();
     return false;
   }
   function refreshSnapPill(){
-    if(snap && !snapHideFocus && !snapHideScroll && !snapDestVisible()) snapPill.classList.remove("hidden");
-    else snapPill.classList.add("hidden");
+    var show = snap && !snapHideFocus && !snapHideScroll && !snapDestVisible() && !snapAutoHidden;
+    if(show){
+      snapPill.classList.remove("hidden");
+      clearTimeout(snapAutoHideT);
+      snapAutoHideT = setTimeout(function(){ snapAutoHidden = true; refreshSnapPill(); }, 5000);
+    } else {
+      snapPill.classList.add("hidden");
+      clearTimeout(snapAutoHideT);
+    }
   }
-  function showSnapPill(label){ snapGo.textContent = label; refreshSnapPill(); }
+  function showSnapPill(label){ snapGo.textContent = label; snapAutoHidden = false; refreshSnapPill(); }
   reader.addEventListener("click", function(e){
     var g = e.target.closest("[data-goto-chapter]");
     if(!g) return;
@@ -3283,6 +3296,9 @@ renderMarks();
   var snapScrollRaf = null;
   window.addEventListener("scroll", function(){
     if(!snap) return;
+    // Any scroll re-arms the pill: it was possibly auto-hidden while the
+    // user was reading, and a scroll means they may want it back.
+    snapAutoHidden = false;
     // Hide the pill while scrolling so it never covers the lines being
     // read; bring it back once scrolling has stopped for a moment.
     snapHideScroll = true;
