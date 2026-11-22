@@ -95,6 +95,12 @@ button{font-family:var(--sans); cursor:pointer}
 .srch-nav{display:flex; gap:4px}
 .srch-nav .tbtn{min-width:34px; padding:0 8px}
 .result-count{font-family:var(--sans); font-size:13px; color:var(--muted); white-space:nowrap}
+.page-wrap{display:flex; align-items:center; gap:6px}
+.page-wrap label{font-family:var(--sans); font-size:14px; font-weight:700; color:var(--ink)}
+.page-input{
+  width:86px; height:38px; border:1px solid var(--rule); border-radius:8px;
+  background:var(--paper); color:var(--ink); padding:0 10px; font-size:15px; font-family:var(--sans);
+}
 
 /* drawer */
 .drawer-backdrop{
@@ -444,6 +450,11 @@ footer.colophon{max-width:780px; margin:0 auto 60px; padding:0 20px; color:var(-
         <button type="button" class="tbtn" id="srchNext" aria-label="Next match">&#8594;</button>
       </div>
       <span class="result-count" id="resultCount"></span>
+    </div>
+    <div class="page-wrap">
+      <label for="pageInput">Page</label>
+      <input class="page-input" id="pageInput" type="number" inputmode="numeric" min="1" max="114" placeholder="Page #" aria-label="Go to printed page number">
+      <button type="button" class="tbtn" id="pageGo">Go</button>
     </div>
     <button type="button" class="tbtn" id="btnMarks">Notes &amp; Marks</button>
     <button type="button" class="tbtn" id="btnCards">Flashcards</button>
@@ -1581,6 +1592,7 @@ var reader=$("reader"), drawer=$("drawer"), backdrop=$("drawerBackdrop"),
     tocNav=$("tocNav"), nowReading=$("nowReading"), resumeBtn=$("resumeBtn"),
     marksList=$("marksList"), marksCount=$("marksCount"),
     searchInput=$("searchInput"), resultCount=$("resultCount"),
+    pageInput=$("pageInput"), pageGo=$("pageGo"),
     selBar=$("selBar"), hlPop=$("hlPop"),
     cardsOverlay=$("cardsOverlay"), toastEl=$("toast");
 
@@ -1829,6 +1841,36 @@ searchInput.addEventListener("keydown", function(e){
 });
 $("srchPrev").addEventListener("click", function(){ if(srchHits.length) showHit(srchIdx-1); });
 $("srchNext").addEventListener("click", function(){ if(srchHits.length) showHit(srchIdx+1); });
+
+/* ---------------- go to printed page ---------------- */
+// Printed page = PDF page − 7. Each section starts on a printed page
+// (its data-page minus 7); a typed page lands on the section that
+// contains it — the last section whose start page is <= the number.
+var pageStarts = sections.map(function(s){
+  var pdf = parseInt(s.getAttribute("data-page") || "0", 10);
+  return {sec: s, printed: pdf >= 8 ? pdf - 7 : 0};
+}).filter(function(p){ return p.printed > 0; });
+var maxPrinted = pageStarts.length ? pageStarts[pageStarts.length - 1].printed : 0;
+function goToPage(){
+  var n = parseInt(pageInput.value, 10);
+  if(isNaN(n)) return;
+  var target = pageStarts[0];
+  if(n < 1){ toast("The guide's numbered pages start at 1"); }
+  else if(n > maxPrinted){ target = pageStarts[pageStarts.length - 1]; toast("Page " + n + " is past the end — jumped to page " + maxPrinted); }
+  else {
+    for(var i = 0; i < pageStarts.length; i++){
+      if(pageStarts[i].printed <= n) target = pageStarts[i];
+      else break;
+    }
+  }
+  jumpToSection(target.sec.id);
+  pageInput.blur();
+}
+pageGo.addEventListener("click", goToPage);
+pageInput.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){ e.preventDefault(); goToPage(); }
+  if(e.key === "Escape"){ pageInput.value = ""; pageInput.blur(); }
+});
 
 /* ---------------- section tools: bookmarks, notes ---------------- */
 function secTitle(s){ return s.getAttribute("data-title") || s.id; }
