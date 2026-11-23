@@ -3209,15 +3209,34 @@ renderMarks();
 // spiritual-independence workbook pages (118–121) carry reading-style
 // titles instead, so the title alone can't identify them.
 //
-// Tapping the button bookmarks that question — it does NOT jump anywhere.
-// Joel then navigates anywhere in the guide via the table of contents,
-// and the pill below appears once the bookmarked question is off-screen,
-// jumping back to that exact question. × clears the bookmark.
-// (Changed 2026-11-23: the old "📖 Go to chapter" button jumped to the
-// start of the chapter, which felt clunky — it landed at the beginning of
-// the passage instead of the exact spot.)
+// Tapping the button bookmarks that question AND jumps to the beginning
+// of the passage (the chapter's reading) and stays there — that is the
+// study flow: read the passage, then the pill below brings him straight
+// back to the question. (Changed 2026-11-23, twice: first the old
+// "📖 Go to chapter" button was replaced by a bookmark that did NOT jump,
+// because the jump to the chapter start felt clunky — but Joel then
+// reported the jump was broken and asked for it back: the button should
+// take him to the beginning of the passage and stay there, with the pill
+// kept up to bring him back to the question.)
 (function(){
   var isWb = function(sec){ return !!sec.querySelector(".qblock"); };
+  // The beginning of the passage for a workbook section: the chapter's
+  // reading, which starts at the nearest preceding major reading section
+  // (chapter-N, introduction, chapters-17-18, spiritual-independence,
+  // independence-N). The spiritual-independence workbook pages name
+  // their Part in the title ("Part 1: …", "Part 3: …") — their passage
+  // is that Part, since the workbook pages sit at the end of the guide
+  // instead of after their Part. The page-64 continuation (Chapter 11)
+  // falls through to the backwards walk and lands on chapter-11.
+  function passageStartFor(sec){
+    var m = /^\s*Part\s+(\d+)/.exec(sec.getAttribute("data-title") || "");
+    if(m && secById["independence-" + m[1]]) return secById["independence-" + m[1]];
+    var idx = sections.indexOf(sec);
+    for(var i = idx - 1; i >= 0; i--){
+      if(/^(preface|introduction|chapter-\d+|chapters-17-18|spiritual-independence|independence-\d+)$/.test(sections[i].id)) return sections[i];
+    }
+    return sec;
+  }
   sections.forEach(function(sec){
     if(!isWb(sec)) return;
     Array.prototype.forEach.call(sec.querySelectorAll(".qblock"), function(qb){
@@ -3248,7 +3267,8 @@ renderMarks();
   // 2026-11-23: the pill should also take him back to where he stopped
   // reading, and that should all be saved — this restores the two-way
   // toggle the old "Go to chapter" snap had, now driven by the
-  // "Bookmark this question" button instead of a chapter jump.)
+  // "Bookmark this question" button, which jumps to the beginning of the
+  // passage (restored 2026-11-23 after Joel reported the jump broken).)
   var snap = null;
   var snapPill = $("snapPill"), snapGo = $("snapGo"), snapX = $("snapX");
   function refreshQbmarkButtons(){
@@ -3307,11 +3327,21 @@ renderMarks();
     var qb = b.closest(".qblock");
     var qid = qb ? qb.getAttribute("data-qid") : null;
     if(!qid) return;
+    var sec = qb.closest("section");
+    var dest = sec ? passageStartFor(sec) : null;
     if(snap && snap.qid === qid){
-      toast("Already bookmarked");
+      // Already bookmarked: just go read the passage again, starting a
+      // fresh reading session (any saved reading spot is for the spot he
+      // stopped at before, not this new pass).
+      snap.readY = null; store.qbreadY = null;
+      snap.mode = "reading"; store.qbmode = "reading";
+      save();
+      refreshSnapPill();
+      if(dest) dest.scrollIntoView({block:"start"});
       return;
     }
     setQbmark(qid);
+    if(dest) dest.scrollIntoView({block:"start"});
     toast("Question bookmarked — the button below will bring you back");
   });
   snapGo.addEventListener("click", function(){
