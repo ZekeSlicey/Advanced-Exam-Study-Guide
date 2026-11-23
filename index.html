@@ -1553,7 +1553,7 @@ try {
 var LS_KEY = "sgi-study-guide-v1";
 function blankStore(){
   return { v:1, bookmarks:{}, highlights:[], notes:[], answers:{}, pos:null, dontknow:[],
-           qbmark:null, prefs:{ size:18, theme:"auto" } };
+           qbmark:null, qbreadY:null, qbmode:"reading", prefs:{ size:18, theme:"auto" } };
 }
 function loadStore(){
   try{
@@ -3232,7 +3232,23 @@ renderMarks();
       (wrap || qb).appendChild(btn);
     });
   });
-  // Snap pill: returns to the bookmarked workbook question. × clears it.
+  // Snap pill: a two-way toggle between the bookmarked workbook question
+  // and the exact spot where Joel stopped reading. × clears the whole
+  // session (bookmark and reading spot).
+  // - Out reading (mode "reading"), the pill reads "↩ Back to question".
+  //   Tapping it remembers the exact scroll position where he stopped
+  //   reading, jumps to the bookmarked question, and the pill becomes
+  //   "📖 Back to reading".
+  // - At the question (mode "question"), the pill reads "📖 Back to
+  //   reading". Tapping it returns to that saved reading spot, and the
+  //   pill becomes "↩ Back to question" again.
+  // Both the bookmarked question and the saved reading spot persist
+  // across sessions (store.qbmark / qbreadY / qbmode, local-only), so
+  // closing and reopening the app keeps the way back. (Joel clarified
+  // 2026-11-23: the pill should also take him back to where he stopped
+  // reading, and that should all be saved — this restores the two-way
+  // toggle the old "Go to chapter" snap had, now driven by the
+  // "Bookmark this question" button instead of a chapter jump.)
   var snap = null;
   var snapPill = $("snapPill"), snapGo = $("snapGo"), snapX = $("snapX");
   function refreshQbmarkButtons(){
@@ -3273,11 +3289,14 @@ renderMarks();
   }
   function refreshSnapPill(){
     var show = snap && !snapHideFocus && !snapHideScroll && !snapDestVisible();
+    snapGo.textContent = (snap && snap.mode === "question") ? "📖 Back to reading" : "↩ Back to question";
     snapPill.classList.toggle("hidden", !show);
   }
   function setQbmark(qid){
-    snap = qid ? {qid: qid} : null;
+    snap = qid ? {qid: qid, readY: null, mode: "reading"} : null;
     store.qbmark = qid || null;
+    store.qbreadY = null;
+    store.qbmode = "reading";
     save();
     refreshQbmarkButtons();
     refreshSnapPill();
@@ -3297,8 +3316,22 @@ renderMarks();
   });
   snapGo.addEventListener("click", function(){
     if(!snap) return;
-    var qb = reader.querySelector('.qblock[data-qid="' + snap.qid + '"]');
-    if(qb) qb.scrollIntoView({block:"center"});
+    if(snap.mode === "reading"){
+      // Leaving the reading spot: remember exactly where he stopped.
+      snap.readY = window.scrollY;
+      store.qbreadY = snap.readY;
+      snap.mode = "question";
+      store.qbmode = "question";
+      save();
+      var qb = reader.querySelector('.qblock[data-qid="' + snap.qid + '"]');
+      if(qb) qb.scrollIntoView({block:"center"});
+    } else {
+      // Back to where he stopped reading.
+      snap.mode = "reading";
+      store.qbmode = "reading";
+      save();
+      window.scrollTo({top: snap.readY || 0, behavior:"auto"});
+    }
     refreshSnapPill();
   });
   snapX.addEventListener("click", function(){ setQbmark(null); toast("Bookmark cleared"); });
@@ -3322,11 +3355,16 @@ renderMarks();
     clearTimeout(snapScrollT);
     snapScrollT = setTimeout(function(){ snapHideScroll = false; refreshSnapPill(); }, 400);
   }, {passive:true});
-  // Restore a bookmarked question from a previous session.
+  // Restore a bookmarked question (and its saved reading spot) from a
+  // previous session.
   if(store.qbmark){
     var qb0 = reader.querySelector('.qblock[data-qid="' + store.qbmark + '"]');
-    if(qb0){ snap = {qid: store.qbmark}; refreshQbmarkButtons(); refreshSnapPill(); }
-    else store.qbmark = null;
+    if(qb0){
+      snap = {qid: store.qbmark,
+              readY: (typeof store.qbreadY === "number" ? store.qbreadY : null),
+              mode: (store.qbmode === "question" ? "question" : "reading")};
+      refreshQbmarkButtons(); refreshSnapPill();
+    } else { store.qbmark = null; store.qbreadY = null; store.qbmode = "reading"; }
   }
 })();
 setCurrent((currentSection()||sections[0]).id);
