@@ -3247,20 +3247,23 @@ renderMarks();
   // The pill is shown only while a bookmark is set, no field is being
   // typed in, and the page hasn't just scrolled: a fixed pill would
   // otherwise sit on top of the lines being read (it covers ~2 lines at
-  // the bottom of the screen). It comes back ~1.2s after scrolling stops,
-  // so it's there when the user pauses to jump back.
+  // the bottom of the screen). It comes back shortly after scrolling
+  // stops, so it's there when the user pauses to jump back.
   // It is also hidden while the bookmarked question is already on screen:
   // after a pill jump lands on the question the pill would only cover the
   // lines below it — e.g. Q3's passage right under Q2 (reported
   // 2026-11-17). It comes back once the user scrolls the question
   // off-screen, which is when it's needed again.
-  // Finally, the pill must not sit on the text indefinitely while the
-  // user reads: once it has been visible for a few seconds without being
-  // tapped it hides itself (reported 2026-11-18 — it covered the sentence
-  // under it while Joel was reading). Any scroll brings it back, so the
-  // way back to the question is never more than a small scroll away.
+  // The pill must NOT hide itself after a few seconds (changed
+  // 2026-11-23): it used to auto-hide 5s after appearing (added
+  // 2026-11-18 because it covered the sentence Joel was reading), but a
+  // live-browser check showed that made the button effectively invisible
+  // — it appeared only in the brief window between the scroll-stop delay
+  // and the auto-hide, so Joel reported "the button never showed up".
+  // A bookmark return has to be there whenever he's ready to tap it, for
+  // as long as he's away from the question. It still hides while
+  // scrolling and while typing, and while the question is on screen.
   var snapHideFocus = false, snapHideScroll = false, snapScrollT = null;
-  var snapAutoHidden = false, snapAutoHideT = null;
   function snapDestVisible(){
     if(!snap) return false;
     var qb = snap.qid && reader.querySelector('.qblock[data-qid="' + snap.qid + '"]');
@@ -3269,22 +3272,14 @@ renderMarks();
     return r.bottom > 0 && r.top < window.innerHeight;
   }
   function refreshSnapPill(){
-    var show = snap && !snapHideFocus && !snapHideScroll && !snapDestVisible() && !snapAutoHidden;
-    if(show){
-      snapPill.classList.remove("hidden");
-      clearTimeout(snapAutoHideT);
-      snapAutoHideT = setTimeout(function(){ snapAutoHidden = true; refreshSnapPill(); }, 5000);
-    } else {
-      snapPill.classList.add("hidden");
-      clearTimeout(snapAutoHideT);
-    }
+    var show = snap && !snapHideFocus && !snapHideScroll && !snapDestVisible();
+    snapPill.classList.toggle("hidden", !show);
   }
   function setQbmark(qid){
     snap = qid ? {qid: qid} : null;
     store.qbmark = qid || null;
     save();
     refreshQbmarkButtons();
-    snapAutoHidden = false;
     refreshSnapPill();
   }
   reader.addEventListener("click", function(e){
@@ -3316,18 +3311,16 @@ renderMarks();
   reader.addEventListener("focusout", function(e){
     if(e.target.matches && e.target.matches("input, textarea")){ snapHideFocus = false; refreshSnapPill(); }
   });
-  // The pill follows scrolling only: any scroll re-arms it (it was
-  // possibly auto-hidden while the user was reading), it hides while
-  // scrolling so it never covers the lines being read, and it comes back
-  // once scrolling has stopped. The bookmarked question is fixed — it
-  // never re-anchors to whatever question is nearest the viewport.
+  // The pill follows scrolling only: it hides while scrolling so it never
+  // covers the lines being read, and it comes back shortly after
+  // scrolling has stopped. The bookmarked question is fixed — it never
+  // re-anchors to whatever question is nearest the viewport.
   window.addEventListener("scroll", function(){
     if(!snap) return;
-    snapAutoHidden = false;
     snapHideScroll = true;
     refreshSnapPill();
     clearTimeout(snapScrollT);
-    snapScrollT = setTimeout(function(){ snapHideScroll = false; refreshSnapPill(); }, 1200);
+    snapScrollT = setTimeout(function(){ snapHideScroll = false; refreshSnapPill(); }, 400);
   }, {passive:true});
   // Restore a bookmarked question from a previous session.
   if(store.qbmark){
