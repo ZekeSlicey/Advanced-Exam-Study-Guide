@@ -3285,11 +3285,21 @@ renderMarks();
   // otherwise sit on top of the lines being read (it covers ~2 lines at
   // the bottom of the screen). It comes back shortly after scrolling
   // stops, so it's there when the user pauses to jump back.
-  // It is also hidden while the bookmarked question is already on screen:
+  // It is also hidden while the bookmarked question is already on screen
+  // — but ONLY in "reading" mode, when the pill says "Back to question":
   // after a pill jump lands on the question the pill would only cover the
   // lines below it — e.g. Q3's passage right under Q2 (reported
   // 2026-11-17). It comes back once the user scrolls the question
   // off-screen, which is when it's needed again.
+  // In "question" mode the pill says "Back to reading" and is the ONLY
+  // way back to where he stopped reading, so it must stay up even while
+  // the question is on screen. Hiding it there (the old rule) left Joel
+  // stuck: the pill vanished on the question, so he tapped "Bookmarked"
+  // instead, which jumps to the beginning of the passage and wipes the
+  // saved spot — "it takes me back to the beginning of the passage"
+  // (reported 2026-11-23, with screenshots). Keep the button up so he
+  // can switch back and forth between the question and where he left off
+  // reading.
   // The pill must NOT hide itself after a few seconds (changed
   // 2026-11-23): it used to auto-hide 5s after appearing (added
   // 2026-11-18 because it covered the sentence Joel was reading), but a
@@ -3302,6 +3312,7 @@ renderMarks();
   var snapHideFocus = false, snapHideScroll = false, snapScrollT = null;
   function snapDestVisible(){
     if(!snap) return false;
+    if(snap.mode === "question") return false;
     var qb = snap.qid && reader.querySelector('.qblock[data-qid="' + snap.qid + '"]');
     if(!qb) return false;
     var r = qb.getBoundingClientRect();
